@@ -1,12 +1,12 @@
 {
-    "name": "networking_simulator",
-    "short_name": "networking_simulator",
+    "name": "ConnectAI",
+    "short_name": "ConnectAI",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#0A0A0F",
+    "theme_color": "#7C3AED",
+    "description": "AI networking practice simulator",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {
