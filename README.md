@@ -30,7 +30,7 @@
 - ConnectAI’s originality shines in its **humanistic approach to networking, cold‑calling, and verbal‑communication practice.** It offers both customizable and fixed personas for sessions and provides multimodal, **personalized interactions and feedback—voice‑to‑voice and text‑based.** We also plan UX‑friendly features such as **tiered scheduling** to keep upcoming practice sessions memorable and users engaged.
   
 ## Technical Execution
--  Web app built with Google’s Flutter framework — primary languages: Dart (frontend) and C++ (backend). The backend runs in the same browser bundle as the UI, so there is no HTTP boundary, no /api/* routes, and no JSON-over-HTTP between layers.
+-  Web app built with Google’s Flutter framework — primary languages: Dart and C++. The backend runs in the same browser bundle as the UI, so there is no HTTP boundary, no /api/* routes, and no JSON-over-HTTP between layers.
 -  Voice-to-voice connection implemented with Gemini Live over WebSocket.
 -  Firestore (Firebase- Google) used to store practice sessions, transcripts, summaries, and custom personas.
 -  Cursor IDE for code editing, terminal, debugging, and integrations; used Cursor AI, Claude, and ChatGPT to streamline implementation.
