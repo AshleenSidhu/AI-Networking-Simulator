@@ -62,11 +62,19 @@ class ConnectPrimaryButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: ConnectColors.accent,
           foregroundColor: ConnectColors.textPrimary,
+          disabledForegroundColor: ConnectColors.textPrimary,
           elevation: 0,
           padding: EdgeInsets.symmetric(vertical: large ? 20 : 16),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ConnectColors.radius)),
         ),
-        child: child,
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            fontWeight: FontWeight.w700,
+            fontSize: large ? 17 : 15,
+            color: ConnectColors.textPrimary,
+          ),
+        ),
       ),
     );
 
@@ -105,19 +113,18 @@ class _ShimmerButtonState extends State<_ShimmerButton>
     return AnimatedBuilder(
       animation: _c,
       builder: (_, child) {
-        return ShaderMask(
-          blendMode: BlendMode.srcATop,
-          shaderCallback: (bounds) {
-            return LinearGradient(
-              begin: Alignment(-1 + _c.value * 2, 0),
-              end: Alignment(_c.value * 2, 0),
-              colors: [
-                Colors.white.withValues(alpha: 0.85),
-                Colors.white,
-                Colors.white.withValues(alpha: 0.85),
-              ],
-            ).createShader(bounds);
-          },
+        final glow = 0.28 + (_c.value * 0.22);
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(ConnectColors.radius + 2),
+            boxShadow: [
+              BoxShadow(
+                color: ConnectColors.accent.withValues(alpha: glow),
+                blurRadius: 18,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
           child: child,
         );
       },

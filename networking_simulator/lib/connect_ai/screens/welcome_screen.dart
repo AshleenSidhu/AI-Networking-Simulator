@@ -6,6 +6,7 @@ import '../layout/responsive.dart';
 import '../navigation/connect_routes.dart';
 import '../theme/connect_theme.dart';
 import '../widgets/connect_widgets.dart';
+import 'auth_gate_screen.dart';
 import 'onboarding_screens.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -73,7 +74,16 @@ class _MobileLayout extends StatelessWidget {
           onPressed: () => connectPush(context, const OnboardingQ1Screen()),
         ),
         const SizedBox(height: 16),
-        Text('I already have an account', style: connectMuted(14)),
+        GestureDetector(
+          onTap: () => connectPush(context, const AuthGateScreen()),
+          child: Text(
+            'I already have an account',
+            style: connectMuted(14).copyWith(
+              decoration: TextDecoration.underline,
+              decorationColor: ConnectColors.textMuted,
+            ),
+          ),
+        ),
         const SizedBox(height: 32),
       ],
     );
@@ -124,7 +134,16 @@ class _WideLayout extends StatelessWidget {
                     onPressed: () => connectPush(context, const OnboardingQ1Screen()),
                   ),
                   const SizedBox(height: 16),
-                  Text('I already have an account', style: connectMuted(14)),
+                  GestureDetector(
+                    onTap: () => connectPush(context, const AuthGateScreen()),
+                    child: Text(
+                      'I already have an account',
+                      style: connectMuted(14).copyWith(
+                        decoration: TextDecoration.underline,
+                        decorationColor: ConnectColors.textMuted,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

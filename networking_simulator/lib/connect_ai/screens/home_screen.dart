@@ -242,7 +242,7 @@ class _ScenarioScroll extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 110,
+      height: 120,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: scenarios.length,
@@ -256,7 +256,7 @@ class _ScenarioScroll extends StatelessWidget {
             ),
             child: Container(
               width: 100,
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               decoration: BoxDecoration(
                 color: ConnectColors.card,
                 borderRadius: BorderRadius.circular(ConnectColors.radius),
@@ -264,11 +264,17 @@ class _ScenarioScroll extends StatelessWidget {
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(emoji, style: const TextStyle(fontSize: 28)),
-                  const SizedBox(height: 8),
-                  Text(name, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-                  const Text('→', style: TextStyle(color: ConnectColors.accent)),
+                  Text(emoji, style: const TextStyle(fontSize: 26, height: 1.1)),
+                  const SizedBox(height: 6),
+                  Text(
+                    name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, height: 1.2),
+                  ),
+                  const Text('→', style: TextStyle(color: ConnectColors.accent, height: 1.2)),
                 ],
               ),
             ),
