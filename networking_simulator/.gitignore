@@ -43,3 +43,13 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Hackathon working notes / dev log (shared between devs, not in git)
+.scratch/
+
+# Local secrets (Gemini API key, etc.)
+.env
+.env.local
+# Note: lib/firebase_options.dart is intentionally tracked — Firebase web
+# config values are safe to commit (per Firebase docs), and committing them
+# means both devs use the same project without out-of-band file sharing.
