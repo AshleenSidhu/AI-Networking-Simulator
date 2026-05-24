@@ -61,7 +61,7 @@ class SessionSettingsCard extends StatelessWidget {
               ),
             ],
           ),
-          const Divider(color: ConnectColors.border, height: 28),
+          Divider(color: ConnectColors.border, height: 28),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -117,7 +117,7 @@ class SessionReminderCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.notifications_outlined, color: ConnectColors.textMuted, size: 20),
+              Icon(Icons.notifications_outlined, color: ConnectColors.textMuted, size: 20),
               const SizedBox(width: 12),
               const Expanded(child: Text('Remind me before session')),
               Switch(

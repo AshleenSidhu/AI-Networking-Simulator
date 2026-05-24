@@ -187,8 +187,8 @@ class _NextSessionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: ConnectColors.card,
         borderRadius: BorderRadius.circular(ConnectColors.radius),
-        border: const Border(
-          left: BorderSide(color: ConnectColors.accent, width: 3),
+        border: Border(
+          left: const BorderSide(color: ConnectColors.accent, width: 3),
           top: BorderSide(color: ConnectColors.border),
           right: BorderSide(color: ConnectColors.border),
           bottom: BorderSide(color: ConnectColors.border),

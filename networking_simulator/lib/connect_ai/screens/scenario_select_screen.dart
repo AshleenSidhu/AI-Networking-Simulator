@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../layout/responsive.dart';
 import '../navigation/connect_routes.dart';
 import '../theme/connect_theme.dart';
-import '../widgets/connect_widgets.dart';
+import '../widgets/scenario/continue_practice_button.dart';
+import '../widgets/scenario/industry_chip.dart';
+import '../widgets/scenario/scenario_card.dart';
+import '../widgets/scenario/session_preview_card.dart';
 import 'persona_editor_screen.dart';
 
 class ScenarioSelectScreen extends StatefulWidget {
@@ -22,9 +26,9 @@ class ScenarioSelectScreen extends StatefulWidget {
 
 class _ScenarioSelectScreenState extends State<ScenarioSelectScreen> {
   String? _selectedTemplate;
-  String _difficulty = 'Medium';
-  String _style = 'Conversational';
-  String _industry = 'Tech';
+  String? _difficulty;
+  String? _style;
+  String? _industry;
 
   static const _templates = [
     ('👔', 'Recruiter', 'Recruiter', 'Practice a first-round screening call.'),
@@ -32,9 +36,20 @@ class _ScenarioSelectScreenState extends State<ScenarioSelectScreen> {
     ('🤝', 'Networking Event', 'Networking Event', 'Break the ice at a professional mixer.'),
   ];
 
+  static const _customTitle = 'Custom Persona';
+
+  bool get _canContinue =>
+      _selectedTemplate != null &&
+      _difficulty != null &&
+      _style != null &&
+      _industry != null;
+
   @override
   void initState() {
     super.initState();
+    if (widget.initialScenario != null) {
+      _selectedTemplate = widget.initialScenario;
+    }
   }
 
   void _openEditor({required String title, required String role, bool custom = false}) {
@@ -48,90 +63,92 @@ class _ScenarioSelectScreenState extends State<ScenarioSelectScreen> {
     );
   }
 
+  void _onContinue() {
+    if (!_canContinue) return;
+
+    if (_selectedTemplate == _customTitle) {
+      _openEditor(title: _customTitle, role: '', custom: true);
+      return;
+    }
+
+    final match = _templates.where((t) => t.$2 == _selectedTemplate);
+    if (match.isEmpty) return;
+    final (_, title, role, _) = match.first;
+    _openEditor(title: title, role: role);
+  }
+
   Widget _body(BuildContext context) {
     return ConnectPage(
       child: ListView(
-        padding: const EdgeInsets.only(bottom: 32),
+        padding: const EdgeInsets.only(bottom: 40),
         children: [
-          Text('Choose a scenario', style: connectTitle(context, size: 24)),
+          Text('Practice session', style: connectTitle(context, size: 26)),
           const SizedBox(height: 8),
-          Text('Pick a template or build your own persona.', style: connectMuted()),
-          const SizedBox(height: 24),
+          Text(
+            'Configure your scenario and session settings, then customize your AI partner.',
+            style: connectMuted(14),
+          ),
+          const SizedBox(height: 32),
+          Text(
+            'CHOOSE A SCENARIO',
+            style: GoogleFonts.inter(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1.1,
+              color: ConnectColors.textMuted,
+            ),
+          ),
+          const SizedBox(height: 14),
           ..._templates.map((t) {
-            final (emoji, title, role, subtitle) = t;
+            final (emoji, title, _, subtitle) = t;
             final selected = _selectedTemplate == title;
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
-              child: SelectableOptionCard(
+              child: ScenarioCard(
                 emoji: emoji,
                 title: title,
                 subtitle: subtitle,
                 selected: selected,
-                onTap: () {
-                  setState(() => _selectedTemplate = title);
-                  _openEditor(title: title, role: role);
-                },
+                onTap: () => setState(() => _selectedTemplate = title),
               ),
             );
           }),
-          GestureDetector(
-            onTap: () => _openEditor(title: 'Custom Persona', role: '', custom: true),
-            child: Container(
-              padding: const EdgeInsets.all(18),
+          ScenarioCard(
+            emoji: '',
+            title: 'Create custom',
+            subtitle: 'Define your own role and prompt.',
+            selected: _selectedTemplate == _customTitle,
+            onTap: () => setState(() => _selectedTemplate = _customTitle),
+            trailingIcon: Container(
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
-                color: ConnectColors.card,
-                borderRadius: BorderRadius.circular(ConnectColors.radius),
-                border: Border.all(color: ConnectColors.accent.withValues(alpha: 0.45)),
+                color: ConnectColors.accent.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: ConnectColors.accent.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(Icons.add_rounded, color: ConnectColors.accent),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Create custom', style: connectTitle(context, size: 16)),
-                        const SizedBox(height: 4),
-                        Text('Define your own role and prompt.', style: connectMuted(13)),
-                      ],
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right_rounded, color: ConnectColors.textMuted),
-                ],
-              ),
+              child: const Icon(Icons.add_rounded, color: ConnectColors.accent),
             ),
           ),
+          const SizedBox(height: 36),
+          _SessionSettingsGroup(
+            difficulty: _difficulty,
+            style: _style,
+            industry: _industry,
+            onDifficulty: (v) => setState(() => _difficulty = v),
+            onStyle: (v) => setState(() => _style = v),
+            onIndustry: (v) => setState(() => _industry = v),
+          ),
+          const SizedBox(height: 24),
+          SessionPreviewCard(
+            scenario: _selectedTemplate,
+            difficulty: _difficulty,
+            conversationStyle: _style,
+            industry: _industry,
+          ),
           const SizedBox(height: 28),
-          Text('Session settings', style: connectTitle(context, size: 18)),
-          const SizedBox(height: 12),
-          _ChipRow(
-            label: 'Difficulty',
-            options: const ['Easy', 'Medium', 'Hard'],
-            selected: _difficulty,
-            onSelected: (v) => setState(() => _difficulty = v),
-          ),
-          const SizedBox(height: 12),
-          _ChipRow(
-            label: 'Style',
-            options: const ['Conversational', 'Formal', 'Challenging'],
-            selected: _style,
-            onSelected: (v) => setState(() => _style = v),
-          ),
-          const SizedBox(height: 12),
-          _ChipRow(
-            label: 'Industry',
-            options: const ['Tech', 'Finance', 'Healthcare'],
-            selected: _industry,
-            onSelected: (v) => setState(() => _industry = v),
+          ContinuePracticeButton(
+            enabled: _canContinue,
+            onPressed: _onContinue,
           ),
         ],
       ),
@@ -150,15 +167,85 @@ class _ScenarioSelectScreenState extends State<ScenarioSelectScreen> {
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Scenarios'),
+        title: const Text('Practice'),
       ),
       body: _body(context),
     );
   }
 }
 
-class _ChipRow extends StatelessWidget {
-  const _ChipRow({
+class _SessionSettingsGroup extends StatelessWidget {
+  const _SessionSettingsGroup({
+    required this.difficulty,
+    required this.style,
+    required this.industry,
+    required this.onDifficulty,
+    required this.onStyle,
+    required this.onIndustry,
+  });
+
+  final String? difficulty;
+  final String? style;
+  final String? industry;
+  final ValueChanged<String> onDifficulty;
+  final ValueChanged<String> onStyle;
+  final ValueChanged<String> onIndustry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(18, 20, 18, 20),
+      decoration: BoxDecoration(
+        color: ConnectColors.card.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(ConnectColors.radius),
+        border: Border.all(color: ConnectColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'SESSION SETTINGS',
+            style: GoogleFonts.inter(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1.1,
+              color: ConnectColors.textMuted,
+            ),
+          ),
+          const SizedBox(height: 20),
+          _SettingChipRow(
+            label: 'Difficulty',
+            options: const ['Easy', 'Medium', 'Hard'],
+            selected: difficulty,
+            onSelected: onDifficulty,
+          ),
+          const SizedBox(height: 22),
+          _SettingChipRow(
+            label: 'Conversation style',
+            options: const ['Conversational', 'Formal', 'Challenging'],
+            selected: style,
+            onSelected: onStyle,
+          ),
+          const SizedBox(height: 22),
+          Text(
+            'Industry',
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: ConnectColors.textMuted,
+            ),
+          ),
+          const SizedBox(height: 10),
+          IndustryChipRow(selected: industry, onSelected: onIndustry),
+        ],
+      ),
+    );
+  }
+}
+
+class _SettingChipRow extends StatelessWidget {
+  const _SettingChipRow({
     required this.label,
     required this.options,
     required this.selected,
@@ -167,7 +254,7 @@ class _ChipRow extends StatelessWidget {
 
   final String label;
   final List<String> options;
-  final String selected;
+  final String? selected;
   final ValueChanged<String> onSelected;
 
   @override
@@ -175,26 +262,45 @@ class _ChipRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: connectMuted(12)),
-        const SizedBox(height: 8),
+        Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: ConnectColors.textMuted,
+          ),
+        ),
+        const SizedBox(height: 10),
         Wrap(
           spacing: 8,
           runSpacing: 8,
           children: options.map((o) {
             final active = o == selected;
-            return ChoiceChip(
-              label: Text(o),
-              selected: active,
-              onSelected: (_) => onSelected(o),
-              selectedColor: ConnectColors.accent.withValues(alpha: 0.25),
-              backgroundColor: ConnectColors.card,
-              labelStyle: TextStyle(
-                color: active ? ConnectColors.textPrimary : ConnectColors.textMuted,
-                fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-                fontSize: 13,
+            return Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => onSelected(o),
+                borderRadius: BorderRadius.circular(10),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                  decoration: BoxDecoration(
+                    color: active ? ConnectColors.accent.withValues(alpha: 0.2) : ConnectColors.cardElevated,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: active ? ConnectColors.accent : ConnectColors.border,
+                    ),
+                  ),
+                  child: Text(
+                    o,
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontWeight: active ? FontWeight.w600 : FontWeight.w500,
+                      color: active ? ConnectColors.textPrimary : ConnectColors.textMuted,
+                    ),
+                  ),
+                ),
               ),
-              side: BorderSide(color: active ? ConnectColors.accent : ConnectColors.border),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             );
           }).toList(),
         ),

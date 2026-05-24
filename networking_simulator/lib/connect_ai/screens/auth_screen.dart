@@ -7,6 +7,7 @@ import '../state/connect_app_state.dart';
 import '../theme/connect_theme.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/connect_widgets.dart';
+import '../widgets/hero_image_card.dart';
 import '../widgets/session_form_widgets.dart';
 import 'home_screen.dart';
 
@@ -172,7 +173,7 @@ class _LogoBlock extends StatelessWidget {
             shape: BoxShape.circle,
             color: ConnectColors.accent,
           ),
-          child: const Icon(Icons.mic_rounded, color: ConnectColors.textPrimary, size: 30),
+          child: const Icon(Icons.mic_rounded, color: Colors.white, size: 30),
         ),
         const SizedBox(height: 24),
         Text(
@@ -278,7 +279,7 @@ class AuthGateScreen extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: ConnectColors.accent,
                   ),
-                  child: const Icon(Icons.mic_rounded, color: ConnectColors.textPrimary),
+                  child: const Icon(Icons.mic_rounded, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 24),
@@ -503,7 +504,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             value: _terms,
                             onChanged: (v) => setState(() => _terms = v ?? false),
                             activeColor: ConnectColors.accent,
-                            side: const BorderSide(color: ConnectColors.border),
+                            side: BorderSide(color: ConnectColors.border),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -578,7 +579,7 @@ class _OnboardingQ1ScreenState extends State<OnboardingQ1Screen> {
       body: TextField(
         controller: _name,
         autofocus: true,
-        style: const TextStyle(color: ConnectColors.textPrimary, fontSize: 18),
+        style: TextStyle(color: ConnectColors.textPrimary, fontSize: 18),
         decoration: InputDecoration(
           hintText: 'Your first name',
           hintStyle: connectMuted(16),
@@ -586,7 +587,7 @@ class _OnboardingQ1ScreenState extends State<OnboardingQ1Screen> {
           fillColor: ConnectColors.card,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(ConnectColors.radius),
-            borderSide: const BorderSide(color: ConnectColors.border),
+            borderSide: BorderSide(color: ConnectColors.border),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(ConnectColors.radius),
@@ -639,6 +640,8 @@ class _OnboardingQ2ScreenState extends State<OnboardingQ2Screen> {
     return _OnboardingScaffold(
       step: 2,
       emoji: '🎓',
+      heroImagePath: 'assets/images/role.png',
+      heroFallbackIcon: Icons.groups_rounded,
       headline: 'What describes you best?',
       subtitle: "We'll personalize your experience",
       body: ConnectResponsive.isDesktop(context)
@@ -724,6 +727,8 @@ class _OnboardingQ3ScreenState extends State<OnboardingQ3Screen> {
     return _OnboardingScaffold(
       step: 3,
       emoji: '🏢',
+      heroImagePath: 'assets/images/industry.png',
+      heroFallbackIcon: Icons.business_center_rounded,
       headline: "What's your industry?",
       subtitle: 'Your personas will match your field',
       body: Wrap(
@@ -789,6 +794,8 @@ class _OnboardingQ4ScreenState extends State<OnboardingQ4Screen> {
     return _OnboardingScaffold(
       step: 4,
       emoji: '🎯',
+      heroImagePath: 'assets/images/goals.png',
+      heroFallbackIcon: Icons.flag_rounded,
       headline: "What's your main goal?",
       subtitle: "We'll build your perfect practice plan",
       body: Column(
@@ -827,6 +834,8 @@ class _OnboardingScaffold extends StatelessWidget {
     this.continueLabel = 'Continue →',
     this.shimmerButton = false,
     this.largeButton = false,
+    this.heroImagePath,
+    this.heroFallbackIcon,
   });
 
   final int step;
@@ -838,6 +847,29 @@ class _OnboardingScaffold extends StatelessWidget {
   final String continueLabel;
   final bool shimmerButton;
   final bool largeButton;
+  final String? heroImagePath;
+  final IconData? heroFallbackIcon;
+
+  Widget _headerColumn(BuildContext context, {double titleSize = 26}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (heroImagePath != null) ...[
+          HeroImageCard(
+            imagePath: heroImagePath!,
+            height: ConnectResponsive.isDesktop(context) ? 200 : 160,
+            fallbackIcon: heroFallbackIcon,
+          ),
+          const SizedBox(height: 20),
+        ],
+        Text(emoji, style: TextStyle(fontSize: ConnectResponsive.isDesktop(context) ? 56 : 48)),
+        const SizedBox(height: 20),
+        Text(headline, style: connectTitle(context, size: titleSize)),
+        const SizedBox(height: 8),
+        Text(subtitle, style: connectMuted(ConnectResponsive.isDesktop(context) ? 16 : 14)),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -857,26 +889,13 @@ class _OnboardingScaffold extends StatelessWidget {
                   children: [
                     if (ConnectResponsive.isDesktop(context))
                       ConnectSplitLayout(
-                        primary: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(emoji, style: const TextStyle(fontSize: 56)),
-                            const SizedBox(height: 20),
-                            Text(headline, style: connectTitle(context, size: 32)),
-                            const SizedBox(height: 8),
-                            Text(subtitle, style: connectMuted(16)),
-                          ],
-                        ),
+                        primary: _headerColumn(context, titleSize: 32),
                         secondary: body,
                         primaryFlex: 2,
                         secondaryFlex: 3,
                       )
                     else ...[
-                      Text(emoji, style: const TextStyle(fontSize: 48)),
-                      const SizedBox(height: 20),
-                      Text(headline, style: connectTitle(context, size: 26)),
-                      const SizedBox(height: 8),
-                      Text(subtitle, style: connectMuted()),
+                      _headerColumn(context),
                       const SizedBox(height: 28),
                       body,
                     ],

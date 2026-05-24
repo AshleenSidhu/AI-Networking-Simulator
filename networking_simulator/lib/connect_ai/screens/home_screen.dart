@@ -13,16 +13,19 @@ import 'schedule_screen.dart';
 // --- home_screen.dart ---
 
 abstract final class _HomeColors {
-  static const background = Color(0xFF080808);
-  static const surface = Color(0xFF0F0F0F);
-  static const elevated = Color(0xFF141414);
-  static const accent = Color(0xFF7C3AED);
-  static const textPrimary = Color(0xFFF2F2F0);
-  static const textSecondary = Color(0xFF666660);
-  static const textMuted = Color(0xFF333330);
-  static const success = Color(0xFF4CAF7D);
-  static const border = Color(0x1AFFFFFF);
-  static const borderFaint = Color(0x08FFFFFF);
+  static Color get background => ConnectColors.background;
+  static Color get surface => ConnectColors.card;
+  static Color get elevated => ConnectColors.cardElevated;
+  static const accent = ConnectColors.accent;
+  static Color get textPrimary => ConnectColors.textPrimary;
+  static Color get textSecondary =>
+      ConnectColors.isDark ? const Color(0xFF666660) : const Color(0xFF6B7280);
+  static Color get textMuted =>
+      ConnectColors.isDark ? const Color(0xFF333330) : const Color(0xFF9CA3AF);
+  static Color get success => ConnectColors.actionGreen;
+  static Color get border => ConnectColors.border;
+  static Color get borderFaint =>
+      ConnectColors.isDark ? const Color(0x08FFFFFF) : const Color(0xFFF0F1F5);
 }
 
 TextStyle _homeCapsLabel({Color color = _HomeColors.accent, double size = 10, double letterSpacing = 1}) =>
@@ -174,7 +177,7 @@ class _TopNavRow extends StatelessWidget {
             decoration: BoxDecoration(
               color: _HomeColors.elevated,
               borderRadius: BorderRadius.circular(999),
-              border: Border.all(color: const Color(0x26FFFFFF)),
+              border: Border.all(color: _HomeColors.border),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -312,7 +315,7 @@ class _HowItWorksPopup extends StatelessWidget {
         color: _HomeColors.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: _HomeColors.border),
-        boxShadow: const [BoxShadow(color: Color(0x60000000), blurRadius: 40, offset: Offset(0, -8))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 24, offset: const Offset(0, -4))],
       ),
       child: SafeArea(
         top: false,
@@ -411,7 +414,7 @@ class _HowItWorksPopup extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: _HomeColors.textPrimary,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -444,10 +447,10 @@ class _HeroPrimaryButton extends StatelessWidget {
             children: [
               Text(
                 'Start session',
-                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: _HomeColors.textPrimary),
+                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
               ),
               const SizedBox(width: 6),
-              const Icon(Icons.arrow_forward_rounded, size: 16, color: _HomeColors.textPrimary),
+              const Icon(Icons.arrow_forward_rounded, size: 16, color: Colors.white),
             ],
           ),
         ),
@@ -473,7 +476,7 @@ class _HeroSecondaryButton extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0x33FFFFFF)),
+            border: Border.all(color: _HomeColors.border),
           ),
           child: Text(
             'How it works',
@@ -494,7 +497,7 @@ class _HomeDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(height: 1, color: const Color(0x0FFFFFFF));
+    return Container(height: 1, color: _HomeColors.borderFaint);
   }
 }
 
@@ -569,7 +572,7 @@ class _HomeUpcomingCard extends StatelessWidget {
         color: _HomeColors.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: _HomeColors.border),
-        boxShadow: const [BoxShadow(color: Color(0x087C3AED), blurRadius: 40)],
+        boxShadow: [BoxShadow(color: _HomeColors.accent.withValues(alpha: 0.08), blurRadius: 24)],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -799,7 +802,7 @@ class _ScenarioTileState extends State<_ScenarioTile> {
 
   @override
   Widget build(BuildContext context) {
-    final bg = _pressed ? const Color(0xFF141414) : _HomeColors.surface;
+    final bg = _pressed ? _HomeColors.borderFaint : _HomeColors.surface;
 
     return GestureDetector(
       onTapDown: (_) => setState(() => _pressed = true),
@@ -882,7 +885,7 @@ class _ProgressCard extends StatelessWidget {
         color: _HomeColors.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: _HomeColors.border),
-        boxShadow: const [BoxShadow(color: Color(0x087C3AED), blurRadius: 40)],
+        boxShadow: [BoxShadow(color: _HomeColors.accent.withValues(alpha: 0.08), blurRadius: 24)],
       ),
       child: Column(
         children: [
@@ -901,7 +904,7 @@ class _ProgressCard extends StatelessWidget {
             final (label, fill, value) = _metrics[i];
             return Column(
               children: [
-                if (i > 0) Container(height: 1, margin: const EdgeInsets.symmetric(vertical: 10), color: const Color(0x0FFFFFFF)),
+                if (i > 0) Container(height: 1, margin: const EdgeInsets.symmetric(vertical: 10), color: _HomeColors.borderFaint),
                 Row(
                   children: [
                     SizedBox(
@@ -934,7 +937,7 @@ class _ProgressCard extends StatelessWidget {
               ],
             );
           }),
-          Container(height: 1, margin: const EdgeInsets.only(top: 12, bottom: 12), color: const Color(0x0FFFFFFF)),
+          Container(height: 1, margin: const EdgeInsets.only(top: 12, bottom: 12), color: _HomeColors.borderFaint),
           Text(
             '+12% improvement from last week',
             textAlign: TextAlign.center,
@@ -969,6 +972,7 @@ class HomeShellState extends State<HomeShell> {
 
   @override
   Widget build(BuildContext context) {
+    ConnectScope.of(context);
     final useSide = ConnectResponsive.useSideNavigation(context);
     final pages = [
       HomeScreen(onGoProfile: () => goToTab(3)),
@@ -1001,7 +1005,7 @@ class HomeShellState extends State<HomeShell> {
       body: Row(
         children: [
           _SideRail(index: _index, onTap: goToTab),
-          const VerticalDivider(width: 1, color: ConnectColors.border),
+          VerticalDivider(width: 1, color: ConnectColors.border),
           Expanded(child: body),
         ],
       ),
@@ -1033,8 +1037,8 @@ class _FloatingPillNav extends StatelessWidget {
             decoration: BoxDecoration(
               color: _HomeColors.elevated,
               borderRadius: BorderRadius.circular(999),
-              border: Border.all(color: const Color(0x26FFFFFF)),
-              boxShadow: const [BoxShadow(color: Color(0x60000000), blurRadius: 32, offset: Offset(0, 8))],
+              border: Border.all(color: _HomeColors.border),
+              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 20, offset: const Offset(0, 4))],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1118,7 +1122,7 @@ class _SideRail extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: ConnectColors.accent,
               ),
-              child: const Icon(Icons.mic_rounded, color: ConnectColors.textPrimary, size: 22),
+              child: const Icon(Icons.mic_rounded, color: Colors.white, size: 22),
             ),
             const SizedBox(height: 8),
             const Text(
@@ -1292,7 +1296,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     const SizedBox(height: 12),
                     TextField(
                       controller: _nameCtrl,
-                      style: const TextStyle(color: ConnectColors.textPrimary, fontSize: 16),
+                      style: TextStyle(color: ConnectColors.textPrimary, fontSize: 16),
                       decoration: InputDecoration(
                         hintText: 'Your name',
                         hintStyle: connectMuted(15),
@@ -1300,7 +1304,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         fillColor: ConnectColors.card,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(ConnectColors.radius),
-                          borderSide: const BorderSide(color: ConnectColors.border),
+                          borderSide: BorderSide(color: ConnectColors.border),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(ConnectColors.radius),
@@ -1390,7 +1394,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool notifications = true;
-  bool darkMode = true;
   bool reminders = true;
 
   @override
@@ -1407,10 +1410,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final sessions = _RecentSessions();
         final prefs = _PreferencesSection(
           notifications: notifications,
-          darkMode: darkMode,
+          darkMode: app.isDarkMode,
           reminders: reminders,
           onNotifications: (v) => setState(() => notifications = v),
-          onDarkMode: (v) => setState(() => darkMode = v),
+          onDarkMode: app.setDarkMode,
           onReminders: (v) => setState(() => reminders = v),
         );
 
@@ -1511,7 +1514,7 @@ class _ProfileHeader extends StatelessWidget {
           onPressed: () => connectSlideUp(context, const EditProfileScreen()),
           style: OutlinedButton.styleFrom(
             foregroundColor: ConnectColors.textPrimary,
-            side: const BorderSide(color: ConnectColors.border),
+            side: BorderSide(color: ConnectColors.border),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ConnectColors.radius)),
           ),
           child: const Text('Edit Profile'),
@@ -1690,7 +1693,7 @@ class _SessionRow extends StatelessWidget {
               color: ConnectColors.success.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Text('$score/100', style: const TextStyle(color: ConnectColors.success, fontWeight: FontWeight.w600, fontSize: 12)),
+            child: Text('$score/100', style: TextStyle(color: ConnectColors.success, fontWeight: FontWeight.w600, fontSize: 12)),
           ),
         ],
       ),

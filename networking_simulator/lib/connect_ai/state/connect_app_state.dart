@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/connect_theme.dart';
+
 /// In-memory UI state (no backend). Updated during onboarding, read on Home/Profile.
 class ConnectAppState extends ChangeNotifier {
   String name = 'Alex';
@@ -57,6 +59,14 @@ class ConnectAppState extends ChangeNotifier {
   int sessionsCompleted = 12;
   int avgScore = 74;
   int dayStreak = 8;
+
+  bool isDarkMode = false;
+
+  void setDarkMode(bool value) {
+    isDarkMode = value;
+    applyConnectThemeMode(dark: value);
+    notifyListeners();
+  }
 
   String get initials {
     final parts = name.trim().split(RegExp(r'\s+'));

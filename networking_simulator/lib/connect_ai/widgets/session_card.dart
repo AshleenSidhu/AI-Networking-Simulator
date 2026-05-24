@@ -95,7 +95,7 @@ class SessionCardWidget extends StatelessWidget {
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
               onPressed: onMenu,
-              icon: const Icon(Icons.more_horiz_rounded, size: 20, color: ScheduleColors.textMuted),
+              icon: Icon(Icons.more_horiz_rounded, size: 20, color: ScheduleColors.textMuted),
             ),
             const SizedBox(width: 4),
             GestureDetector(

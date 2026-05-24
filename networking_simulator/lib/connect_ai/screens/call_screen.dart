@@ -47,6 +47,11 @@ class _CallScreenState extends State<CallScreen> with SingleTickerProviderStateM
     connectPush(context, FeedbackScreen(personaName: widget.personaName));
   }
 
+  bool get _aiSpeaking {
+    if (_messages.isEmpty) return true;
+    return !_messages.last.isUser;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +81,7 @@ class _CallScreenState extends State<CallScreen> with SingleTickerProviderStateM
               Expanded(
                 child: Column(
                   children: [
-                    _AvatarPulse(pulse: _pulse, initials: _initials(widget.personaName)),
+                    _AvatarPulse(pulse: _pulse, initials: _initials(widget.personaName), speaking: _aiSpeaking),
                     const SizedBox(height: 12),
                     Text('Live · 02:14', style: connectMuted(13)),
                     const SizedBox(height: 20),
@@ -114,16 +119,17 @@ class _Msg {
 }
 
 class _AvatarPulse extends StatelessWidget {
-  const _AvatarPulse({required this.pulse, required this.initials});
+  const _AvatarPulse({required this.pulse, required this.initials, required this.speaking});
   final Animation<double> pulse;
   final String initials;
+  final bool speaking;
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: pulse,
       builder: (_, __) {
-        final scale = 1 + pulse.value * 0.04;
+        final scale = speaking ? 1 + pulse.value * 0.05 : 1.0;
         return Transform.scale(
           scale: scale,
           child: Container(
@@ -133,15 +139,18 @@ class _AvatarPulse extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  ConnectColors.accent.withValues(alpha: 0.35 + pulse.value * 0.15),
+                  ConnectColors.accent.withValues(alpha: speaking ? 0.22 + pulse.value * 0.12 : 0.12),
                   ConnectColors.card,
                 ],
               ),
-              border: Border.all(color: ConnectColors.accent.withValues(alpha: 0.5)),
+              border: Border.all(
+                color: ConnectColors.accent.withValues(alpha: speaking ? 0.55 : 0.25),
+                width: speaking ? 2.5 : 1.5,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: ConnectColors.accent.withValues(alpha: 0.25),
-                  blurRadius: 24 + pulse.value * 12,
+                  color: ConnectColors.accent.withValues(alpha: speaking ? 0.28 : 0.12),
+                  blurRadius: speaking ? 28 + pulse.value * 14 : 16,
                 ),
               ],
             ),
@@ -179,7 +188,7 @@ class _CoachWhisper extends StatelessWidget {
               style: connectMuted(13),
             ),
           ),
-          GestureDetector(onTap: onDismiss, child: const Icon(Icons.close, size: 18, color: ConnectColors.textMuted)),
+          GestureDetector(onTap: onDismiss, child: Icon(Icons.close, size: 18, color: ConnectColors.textMuted)),
         ],
       ),
     );
