@@ -90,6 +90,22 @@ class ConnectAppState extends ChangeNotifier {
     this.goalDetail = goalDetail;
     notifyListeners();
   }
+
+  void updateProfile({
+    required String name,
+    required String role,
+    required Set<String> industries,
+    required String goal,
+  }) {
+    final detail = _goalDetails[goal] ?? goal;
+    updateFromOnboarding(
+      name: name.trim().isEmpty ? 'Alex' : name.trim(),
+      role: role,
+      industries: industries,
+      goal: goal,
+      goalDetail: detail,
+    );
+  }
 }
 
 /// Draft values collected during onboarding (updated each step).
