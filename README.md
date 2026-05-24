@@ -36,10 +36,7 @@
 -  Voice-to-voice connection implemented with Gemini Live over WebSocket.
 -  Firestore (Firebase- Google) used to store practice sessions, transcripts, summaries, and custom personas.
 -  Cursor IDE for code editing, terminal, debugging, and integrations; used Cursor AI, Claude, and ChatGPT to streamline implementation.
--  For more technical details, see:
-      networking_simulator/
-      .cursor/plans/
-      networking_simulator_hackathon_mvp_1f613750.plan.md
+-  For more technical details, see: networking_simulator/.cursor/plans/networking_simulator_hackathon_mvp_1f613750.plan.md
   
 ## UX and Design
 -  ConnectAI features a **simple, effective interface** with light and dark modes. It avoids crowding by displaying essential features, ensures smooth transitions between pages, and uses color and size to make important content salient when clicked. Intuitive icons improve clarity and comprehension.
