@@ -21,10 +21,10 @@
   - Practice page lets users choose or create personas (e.g., recruiter, hiring manager), select conversation style and difficulty, set industry context, and receive both verbal and written tailored feedback.
   - AI recommendations for when to practice. Furthermore, psychology notes that notifications are dopamine-inducing ‘attention-triggers’ that drive curiosity and improve engagement towards a task (Cse, 2026). A single "your session is starting" ping can be forgettable; here is a proposed remedy: Reminders for upcoming practice sessions at T‑60, T‑15, and T‑0.
 - <ins>Future Additions:</ins>
-  1. Tiered scheduling for real schedules: ConnectAI sends notifications/reminders for upcoming sessions at multiple increments between 24 hours before the session and the session start (T‑0).
-  2. Broaden audience coverage to include unlisted professions/roles (e.g., career transitioners), as well as industries.
-  3. Add calendar integration to allow exporting/importing practice sessions to personal calendars (and vice-versa). Potentially allowing ConnectAI to bridge real-life schedules with practice: prepare users for upcoming interviews, networking events, or HR meetings based on their inputted calendar.
-  4. Improve persona realism by incorporating real‑world data and judging criteria from industry professionals (e.g., HR recruiters and hiring managers).
+  - Tiered scheduling for real schedules: ConnectAI sends notifications/reminders for upcoming sessions at multiple increments between 24 hours before the session and the session start (T‑0).
+  - Broaden audience coverage to include unlisted professions/roles (e.g., career transitioners), as well as industries.
+  - Add calendar integration to allow exporting/importing practice sessions to personal calendars (and vice-versa). Potentially allowing ConnectAI to bridge real-life schedules with practice: prepare users for upcoming interviews, networking events, or HR meetings based on their inputted calendar.
+  - Improve persona realism by incorporating real‑world data and judging criteria from industry professionals (e.g., HR recruiters and hiring managers).
 
 ## Innovation & Originality
 - ConnectAI’s originality shines in its **humanistic approach to networking, cold‑calling, and verbal‑communication practice.** It offers both customizable and fixed personas for sessions and provides multimodal, **personalized interactions and feedback—voice‑to‑voice and text‑based.** We also plan UX‑friendly features such as **tiered scheduling** to keep upcoming practice sessions memorable and users engaged.
@@ -42,6 +42,12 @@
 -  Git Happens pushed itself on multiple fronts. During brainstorming and planning we evaluated how best to achieve ConnectAI’s goals: what users would (or wouldn’t) benefit from, which incentives to offer, and how to reach target audiences. Technically, team members learned Google’s Flutter framework and Dart for the first time. Through iterative review and refinement, Git Happens produced an AI networking‑simulator demo with a user‑friendly interface that highlights the most important features, all within the hackathon submission deadline.
 
 ## Citations
+- Executive Recruit. (2024). *The Importance of Mastering Networking and Cold Call Communication: A Critical Skill for Everyone, Not Just Salespeople.* LinkedIn. https://www.linkedin.com/pulse/importance-mastering-networking-cold-call-communication-je8ae/
+- McMaster University. (2025). *Networking: Navigating the Anxiety.* https://studentsuccess.mcmaster.ca/networking-navigating-the-anxiety/
+- Cse, S. (2026). *The Psychology of Notifications: How Technology Hacks Human Attention.* Medium. https://medium.com/@sandra.cse2024/the-psychology-of-notifications-how-technology-hacks-human-attention-486c5af7c756
+- KallyAI. (2026). *Phone Anxiety Statistics 2026: Data, Demographics & What Helps.* https://kallyai.com/resources/phone-anxiety-statistics#citation-axa-2025
+
+
 
 
 
