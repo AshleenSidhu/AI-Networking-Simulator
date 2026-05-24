@@ -123,7 +123,7 @@ final personasProvider = StreamProvider<List<Persona>>((ref) {
 
 /// Look up a single persona by id. Combines templates + cached custom.
 final personaByIdProvider = Provider.family<Persona?, String>((ref, id) {
-  final all = ref.watch(personasProvider).valueOrNull;
+  final all = ref.watch(personasProvider).value;
   if (all == null) {
     return ref.watch(personaRepositoryProvider).byId(id);
   }

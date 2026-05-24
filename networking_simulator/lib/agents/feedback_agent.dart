@@ -47,9 +47,12 @@ class MockFeedbackAgent implements FeedbackAgent {
         'Cut filler words on technical answers.',
         "Slow down on the 'tell me about yourself' opener.",
       ],
-      recommendedNextPersonaId: 'hiring_manager_marcus',
+      // Must match a real persona id from PersonaRepository.templates,
+      // otherwise the FeedbackScreen falls through to the bare "Back to
+      // home" button instead of rendering the scheduling CTA.
+      recommendedNextPersonaId: 'networking_marcus',
       recommendedNextRationale:
-          'You did well with screening — try a hiring manager next to go deeper on technical fit.',
+          "You did well with screening — try Marcus next to go deeper on technical fit and 'manager interview' framing.",
       skillScores: const {
         'Communication': 0.82,
         'Confidence': 0.70,

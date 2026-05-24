@@ -62,12 +62,12 @@ class MockFirestoreService implements FirestoreService {
   final Map<String, ScheduledSession> _scheduled = {};
   final Map<String, FeedbackReport> _feedback = {};
 
-  final _sessionsCtrl =
-      StreamController<List<Session>>.broadcast()..add(const []);
-  final _personasCtrl =
-      StreamController<List<Persona>>.broadcast()..add(const []);
-  final _scheduledCtrl =
-      StreamController<List<ScheduledSession>>.broadcast()..add(const []);
+  // Broadcast controllers intentionally do NOT buffer events for late
+  // subscribers. We rely on each watchXxx() method to yield the current
+  // snapshot first via async*, then forward live updates from these.
+  final _sessionsCtrl = StreamController<List<Session>>.broadcast();
+  final _personasCtrl = StreamController<List<Persona>>.broadcast();
+  final _scheduledCtrl = StreamController<List<ScheduledSession>>.broadcast();
 
   MockFirestoreService() {
     // Seed two mock past sessions so the home + profile screens have
@@ -93,7 +93,6 @@ class MockFirestoreService implements FirestoreService {
     );
     _sessions[s1.id] = s1;
     _sessions[s2.id] = s2;
-    _sessionsCtrl.add(_sessions.values.toList());
   }
 
   void _emitSessions() => _sessionsCtrl.add(_sessions.values.toList());
@@ -101,12 +100,18 @@ class MockFirestoreService implements FirestoreService {
   void _emitScheduled() => _scheduledCtrl.add(_scheduled.values.toList());
 
   @override
-  Stream<List<Session>> watchRecentSessions({int limit = 20}) =>
-      _sessionsCtrl.stream.map((list) {
-        final sorted = [...list]
-          ..sort((a, b) => b.startedAt.compareTo(a.startedAt));
-        return sorted.take(limit).toList();
-      });
+  Stream<List<Session>> watchRecentSessions({int limit = 20}) async* {
+    List<Session> sorted(Iterable<Session> input) {
+      final list = input.toList()
+        ..sort((a, b) => b.startedAt.compareTo(a.startedAt));
+      return list.take(limit).toList();
+    }
+
+    yield sorted(_sessions.values);
+    await for (final list in _sessionsCtrl.stream) {
+      yield sorted(list);
+    }
+  }
 
   @override
   Future<void> writeSession(Session session) async {
@@ -118,7 +123,10 @@ class MockFirestoreService implements FirestoreService {
   Future<Session?> readSession(String id) async => _sessions[id];
 
   @override
-  Stream<List<Persona>> watchUserPersonas() => _personasCtrl.stream;
+  Stream<List<Persona>> watchUserPersonas() async* {
+    yield _personas.values.toList();
+    yield* _personasCtrl.stream;
+  }
 
   @override
   Future<String> writeUserPersona(Persona persona) async {
@@ -143,8 +151,10 @@ class MockFirestoreService implements FirestoreService {
   }
 
   @override
-  Stream<List<ScheduledSession>> watchScheduledSessions() =>
-      _scheduledCtrl.stream;
+  Stream<List<ScheduledSession>> watchScheduledSessions() async* {
+    yield _scheduled.values.toList();
+    yield* _scheduledCtrl.stream;
+  }
 
   @override
   Future<String> writeScheduledSession(ScheduledSession session) async {
@@ -334,5 +344,12 @@ final firestoreServiceProvider = Provider<FirestoreService>((ref) {
 });
 
 /// Forward-declared here; populated by auth_controller.dart. Defined as a
-/// state provider so auth_controller can update it without circular deps.
-final currentUidProvider = StateProvider<String?>((ref) => null);
+/// Notifier so auth_controller can update it without circular deps.
+class CurrentUidNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
+  void set(String? uid) => state = uid;
+}
+
+final currentUidProvider =
+    NotifierProvider<CurrentUidNotifier, String?>(CurrentUidNotifier.new);

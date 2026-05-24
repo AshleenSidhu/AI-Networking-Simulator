@@ -15,7 +15,7 @@ final scheduledSessionsProvider =
 
 /// The next upcoming session (or null). Drives the home `_UpcomingCard`.
 final nextSessionProvider = Provider<ScheduledSession?>((ref) {
-  final all = ref.watch(scheduledSessionsProvider).valueOrNull ?? const [];
+  final all = ref.watch(scheduledSessionsProvider).value ?? const [];
   if (all.isEmpty) return null;
   final now = DateTime.now();
   return all.firstWhere(

@@ -6,6 +6,15 @@ import '../models/scheduled_session.dart';
 /// notification scheduler writes to this provider when the T-0 tier
 /// fires; the home screen reads it and renders [RingingOverlay] when
 /// the value is [HomeOverlayRinging].
-final homeOverlayProvider = StateProvider<HomeOverlay>((ref) {
-  return const HomeOverlayNone();
-});
+class HomeOverlayNotifier extends Notifier<HomeOverlay> {
+  @override
+  HomeOverlay build() => const HomeOverlayNone();
+
+  /// Callers (e.g. the notification scheduler) update the overlay state.
+  void set(HomeOverlay value) => state = value;
+}
+
+final homeOverlayProvider =
+    NotifierProvider<HomeOverlayNotifier, HomeOverlay>(
+  HomeOverlayNotifier.new,
+);

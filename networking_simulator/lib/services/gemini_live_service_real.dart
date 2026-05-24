@@ -60,43 +60,72 @@ class RealGeminiLiveService implements GeminiLiveService {
     final uri = Uri.parse(
       'wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=$apiKey',
     );
+    final keyLen = apiKey.length;
+    final keyPrefix = apiKey.substring(0, keyLen < 6 ? keyLen : 6);
+    debugPrint('[GeminiLive] connect: model=$geminiLiveModel voice=$voice '
+        'apiKey=$keyPrefix… (len=$keyLen)');
     _ws = WebSocketChannel.connect(uri);
     _connected = true;
 
     _wsSub = _ws!.stream.listen(
-      _onMessage,
+      (raw) {
+        // Surface raw incoming frames (truncated) before parsing so we can
+        // catch error envelopes the parser silently skips.
+        final preview = raw is String
+            ? raw
+            : raw is List<int>
+                ? utf8.decode(raw, allowMalformed: true)
+                : raw.toString();
+        debugPrint(
+            '[GeminiLive] ◀ ${preview.length > 400 ? preview.substring(0, 400) + "…" : preview}');
+        _onMessage(raw);
+      },
       onError: (e) {
         debugPrint('[GeminiLive] WS error: $e');
         _transcriptCtrl.addError(e);
       },
       onDone: () {
-        debugPrint('[GeminiLive] WS closed');
+        // closeCode/closeReason are populated by the WS layer when the
+        // server (or proxy) sends a close frame. Logging them is the
+        // single most useful piece of info for diagnosing setup failures.
+        final code = _ws?.closeCode;
+        final reason = _ws?.closeReason;
+        debugPrint(
+            '[GeminiLive] WS closed (code=$code reason=${reason ?? "(none)"})');
         _connected = false;
       },
     );
 
-    // Setup frame.
+    // Setup frame. Fields use camelCase per the Live API JSON contract;
+    // the v1beta endpoint is gRPC under the hood and previously tolerated
+    // snake_case, but the public docs are camelCase and that's what's
+    // safe to rely on going forward.
     final setup = {
       'setup': {
         'model': 'models/$geminiLiveModel',
-        'generation_config': {
-          'response_modalities': ['AUDIO'],
-          'speech_config': {
-            'voice_config': {
-              'prebuilt_voice_config': {'voice_name': voice}
+        'generationConfig': {
+          'responseModalities': ['AUDIO'],
+          'speechConfig': {
+            'voiceConfig': {
+              'prebuiltVoiceConfig': {'voiceName': voice}
             }
           },
         },
-        'system_instruction': {
+        'systemInstruction': {
           'parts': [
             {'text': systemInstruction}
           ]
         },
-        'input_audio_transcription': const <String, dynamic>{},
-        'output_audio_transcription': const <String, dynamic>{},
+        'inputAudioTranscription': const <String, dynamic>{},
+        'outputAudioTranscription': const <String, dynamic>{},
       },
     };
-    _ws!.sink.add(jsonEncode(setup));
+    final setupJson = jsonEncode(setup);
+    // Don't log the full system instruction at INFO level — it includes
+    // ConnectAppState vars and previous-session summary. Log shape only.
+    debugPrint('[GeminiLive] ▶ setup (${setupJson.length} bytes) keys='
+        '${(setup['setup'] as Map).keys.toList()}');
+    _ws!.sink.add(setupJson);
 
     await _setupComplete.future.timeout(
       const Duration(seconds: 15),
@@ -123,14 +152,15 @@ class RealGeminiLiveService implements GeminiLiveService {
     final ws = _ws;
     if (ws == null) return;
     final b64 = base64Encode(pcm16);
+    // `mediaChunks[]` is deprecated as of the v1beta API refresh — use the
+    // singular `audio` Blob instead (mediaChunks only ever processed the
+    // first chunk anyway, but emitted no error for ignored ones).
     final frame = {
-      'realtime_input': {
-        'media_chunks': [
-          {
-            'mime_type': 'audio/pcm;rate=16000',
-            'data': b64,
-          }
-        ],
+      'realtimeInput': {
+        'audio': {
+          'mimeType': 'audio/pcm;rate=16000',
+          'data': b64,
+        },
       },
     };
     ws.sink.add(jsonEncode(frame));

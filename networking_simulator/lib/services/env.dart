@@ -11,11 +11,23 @@ const bool useMocks = bool.fromEnvironment('USE_MOCKS');
 /// browser-STT + Gemini-text + browser-TTS fallback path. Default: true.
 const bool useLive = bool.fromEnvironment('USE_LIVE', defaultValue: true);
 
-/// Gemini Live model — flip to `gemini-2.0-flash-live-001` if the preview
-/// model gates us. Half-cascaded but cheaper and good enough for demo.
+/// Gemini Live model.
+///
+/// Naming has been turbulent — for posterity:
+/// - `gemini-2.5-flash-preview-native-audio-dialog` (mid-2025) → 404, dead
+/// - `gemini-live-2.5-flash-native-audio` (early-2026 docs alias) → 404 for
+///   public API keys; docs-only string
+/// - `gemini-2.0-flash-live-001` (GA half-cascaded) → server returns 1008
+///   "not found for API version v1beta" on this key
+/// - `gemini-2.5-flash-native-audio-preview-12-2025` (Dec 2025) → predecessor
+/// - **`gemini-3.1-flash-live-preview` (Mar 2026, current default)** ← us
+///
+/// 3.1 migration note: it dropped proactive audio + affective dialog and
+/// renamed `thinkingBudget` → `thinkingLevel`. We don't use any of those.
+/// See: https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-live-preview
 const String geminiLiveModel = String.fromEnvironment(
   'GEMINI_LIVE_MODEL',
-  defaultValue: 'gemini-2.5-flash-preview-native-audio-dialog',
+  defaultValue: 'gemini-3.1-flash-live-preview',
 );
 
 /// Gemini text model for the judge + summary calls.

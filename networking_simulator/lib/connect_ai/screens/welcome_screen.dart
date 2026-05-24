@@ -7,6 +7,7 @@ import '../navigation/connect_routes.dart';
 import '../theme/connect_theme.dart';
 import '../widgets/connect_widgets.dart';
 import 'onboarding_screens.dart';
+import 'sign_in_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -73,7 +74,11 @@ class _MobileLayout extends StatelessWidget {
           onPressed: () => connectPush(context, const OnboardingQ1Screen()),
         ),
         const SizedBox(height: 16),
-        Text('I already have an account', style: connectMuted(14)),
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => connectPush(context, const SignInScreen()),
+          child: Text('I already have an account', style: connectMuted(14)),
+        ),
         const SizedBox(height: 32),
       ],
     );
@@ -124,7 +129,11 @@ class _WideLayout extends StatelessWidget {
                     onPressed: () => connectPush(context, const OnboardingQ1Screen()),
                   ),
                   const SizedBox(height: 16),
-                  Text('I already have an account', style: connectMuted(14)),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => connectPush(context, const SignInScreen()),
+                    child: Text('I already have an account', style: connectMuted(14)),
+                  ),
                 ],
               ),
             ),

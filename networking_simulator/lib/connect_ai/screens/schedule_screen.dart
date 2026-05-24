@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/scheduled_session.dart';
 import '../../state/persona_repository.dart';
 import '../../state/schedule_controller.dart';
+import '../layout/responsive.dart';
 import '../navigation/connect_routes.dart';
 import '../theme/connect_theme.dart';
 import '../widgets/connect_widgets.dart';
@@ -121,55 +122,69 @@ class _ScheduleRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final persona = ref.watch(personaByIdProvider(session.personaId));
     final controller = ref.read(scheduleControllerProvider.notifier);
+    // See _UpcomingCard for the rationale: Stack + Positioned stripe to
+    // sidestep Flutter's "uniform colors" rule for rounded borders.
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: ConnectColors.card,
         borderRadius: BorderRadius.circular(ConnectColors.radius),
-        border: const Border(
-          left: BorderSide(color: ConnectColors.accent, width: 3),
-          top: BorderSide(color: ConnectColors.border),
-          right: BorderSide(color: ConnectColors.border),
-          bottom: BorderSide(color: ConnectColors.border),
-        ),
+        border: Border.all(color: ConnectColors.border),
       ),
-      child: Row(
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
         children: [
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: ConnectColors.cardElevated,
-            child: Text(persona?.avatarEmoji ?? '🎙️',
-                style: const TextStyle(fontSize: 20)),
+          const Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 3,
+            child: ColoredBox(color: ConnectColors.accent),
           ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
               children: [
-                Text(persona?.name ?? 'Persona',
-                    style: const TextStyle(fontWeight: FontWeight.w700)),
-                Text(_fmtDate(session.scheduledAt) +
-                    (session.note == null ? '' : ' · ${session.note!}'),
-                  style: connectMuted(12),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                CircleAvatar(
+                  radius: 22,
+                  backgroundColor: ConnectColors.cardElevated,
+                  child: Text(persona?.avatarEmoji ?? '🎙️',
+                      style: const TextStyle(fontSize: 20)),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(persona?.name ?? 'Persona',
+                          style: const TextStyle(fontWeight: FontWeight.w700)),
+                      Text(
+                        _fmtDate(session.scheduledAt) +
+                            (session.note == null ? '' : ' · ${session.note!}'),
+                        style: connectMuted(12),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Start now',
+                  icon: const Icon(Icons.play_arrow_rounded, color: ConnectColors.accent),
+                  onPressed: () => connectPush(
+                    context,
+                    CallScreen(personaId: session.personaId),
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Delete',
+                  icon: const Icon(Icons.close_rounded, color: ConnectColors.textMuted),
+                  onPressed: () => controller.deleteSession(session.id),
                 ),
               ],
             ),
-          ),
-          IconButton(
-            tooltip: 'Start now',
-            icon: const Icon(Icons.play_arrow_rounded, color: ConnectColors.accent),
-            onPressed: () => connectPush(
-              context,
-              CallScreen(personaId: session.personaId),
-            ),
-          ),
-          IconButton(
-            tooltip: 'Delete',
-            icon: const Icon(Icons.close_rounded, color: ConnectColors.textMuted),
-            onPressed: () => controller.deleteSession(session.id),
           ),
         ],
       ),

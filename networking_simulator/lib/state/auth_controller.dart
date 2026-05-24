@@ -35,7 +35,7 @@ abstract class AuthController {
 /// hasn't been configured yet (HUMAN_TODO step 5 not done).
 class MockAuthController implements AuthController {
   MockAuthController(this._ref) {
-    _ref.read(currentUidProvider.notifier).state = _user.uid;
+    _ref.read(currentUidProvider.notifier).set(_user.uid);
     _ctrl.add(_user);
   }
 
@@ -62,7 +62,7 @@ class MockAuthController implements AuthController {
   @override
   Future<void> signOut() async {
     _ctrl.add(null);
-    _ref.read(currentUidProvider.notifier).state = null;
+    _ref.read(currentUidProvider.notifier).set(null);
   }
 }
 
@@ -81,7 +81,7 @@ class RealAuthController implements AuthController {
               photoUrl: u.photoURL,
             );
       _ctrl.add(mapped);
-      _ref.read(currentUidProvider.notifier).state = mapped?.uid;
+      _ref.read(currentUidProvider.notifier).set(mapped?.uid);
     });
   }
 

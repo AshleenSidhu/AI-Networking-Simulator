@@ -16,14 +16,20 @@ import 'persona_repository.dart';
 
 /// Owns the live-call lifecycle for one persona.
 ///
-/// One SessionController instance is created per call (keyed by personaId).
-/// It builds the system instruction (template + ConnectAppState vars +
-/// previous summary), opens the Gemini Live connection, pipes transcript
-/// turns and AI-speaking signals into [state], and on hang-up writes the
-/// Session to Firestore + kicks off the summary agent.
+/// One [SessionController] instance is created per call, keyed by personaId
+/// via [NotifierProvider.family]. It builds the system instruction
+/// (template + ConnectAppState vars + previous summary), opens the Gemini
+/// Live connection, pipes transcript turns and AI-speaking signals into
+/// [state], and on hang-up writes the [Session] to Firestore + kicks off
+/// the summary agent.
 ///
-/// The call screen reads `state` and calls [hangUp]/[toggleMute]/[pushToTalk].
-class SessionController extends FamilyNotifier<SessionState, String> {
+/// Riverpod 3.x note: families pass the arg via constructor, not via
+/// build(). [personaId] is stored at construction and used everywhere.
+class SessionController extends Notifier<SessionState> {
+  SessionController(this.personaId);
+
+  final String personaId;
+
   final _uuid = const Uuid();
   late final String _sessionId;
   late final DateTime _startedAt;
@@ -34,7 +40,7 @@ class SessionController extends FamilyNotifier<SessionState, String> {
   bool _disposed = false;
 
   @override
-  SessionState build(String personaId) {
+  SessionState build() {
     _sessionId = _uuid.v4();
     _startedAt = DateTime.now();
 
@@ -42,7 +48,7 @@ class SessionController extends FamilyNotifier<SessionState, String> {
 
     // Kick off the async connect side-effect on the next microtask so the
     // caller gets back a valid initial state immediately.
-    Future.microtask(() => _connect(personaId));
+    Future.microtask(_connect);
 
     return SessionState(
       sessionId: _sessionId,
@@ -56,7 +62,7 @@ class SessionController extends FamilyNotifier<SessionState, String> {
     );
   }
 
-  Future<void> _connect(String personaId) async {
+  Future<void> _connect() async {
     final persona = ref.read(personaByIdProvider(personaId));
     if (persona == null || persona.id.isEmpty) {
       state = state.copyWith(
@@ -74,9 +80,6 @@ class SessionController extends FamilyNotifier<SessionState, String> {
       final firestore = ref.read(firestoreServiceProvider);
       final previousSummary = await firestore.readSummary(persona.id);
 
-      // Pull personalization values from ConnectAppState (frontend's
-      // existing onboarding state). Read once at connect-time — mid-call
-      // edits don't affect a running persona.
       final connectState = ref.read(connectAppStateProvider);
       final systemInstruction = await PersonaAgent(persona: persona)
           .buildSystemInstruction(
@@ -192,7 +195,6 @@ class SessionController extends FamilyNotifier<SessionState, String> {
     _ticker?.cancel();
     _transcriptSub?.cancel();
     _speakingSub?.cancel();
-    // Best-effort disconnect; ignore errors.
     try {
       _live.disconnect();
     } catch (_) {}

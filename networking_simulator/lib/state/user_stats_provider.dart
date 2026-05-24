@@ -13,7 +13,7 @@ final recentSessionsProvider = StreamProvider<List<Session>>((ref) {
 
 /// Aggregated user stats: derived from the recent-sessions stream.
 final userStatsProvider = Provider<UserStats>((ref) {
-  final sessions = ref.watch(recentSessionsProvider).valueOrNull ?? const [];
+  final sessions = ref.watch(recentSessionsProvider).value ?? const [];
   if (sessions.isEmpty) return UserStats.empty();
 
   final scored = sessions.where((s) => s.score != null).toList();

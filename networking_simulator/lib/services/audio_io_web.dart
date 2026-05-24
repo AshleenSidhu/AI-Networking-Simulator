@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
@@ -31,7 +32,7 @@ class RealAudioIO implements AudioIO {
     if (_initialized) return;
     try {
       _ctx = web.AudioContext();
-      await _ctx!.audioWorklet.addModule('audio_worklet.js'.toJS).toDart;
+      await _ctx!.audioWorklet.addModule('audio_worklet.js').toDart;
 
       final stream = await web.window.navigator.mediaDevices
           .getUserMedia(web.MediaStreamConstraints(audio: true.toJS))
@@ -76,11 +77,11 @@ class RealAudioIO implements AudioIO {
   void enqueuePlayback(Uint8List pcm24k) {
     final node = _playback;
     if (node == null) return;
-    final buffer = pcm24k.buffer.asInt8List().buffer.toJS;
-    final payload = JSObject();
-    payload.setProperty('pcm'.toJS, buffer);
-    payload.setProperty('sourceRate'.toJS, 24000.toJS);
-    node.port.postMessage(payload);
+    final payload = <String, Object?>{
+      'pcm': pcm24k.buffer.toJS,
+      'sourceRate': 24000,
+    }.jsify();
+    if (payload != null) node.port.postMessage(payload);
     _playingCtrl.add(true);
   }
 

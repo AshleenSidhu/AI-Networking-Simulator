@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../state/auth_controller.dart';
 import '../layout/responsive.dart';
+import '../navigation/connect_routes.dart';
 import '../state/connect_app_state.dart';
 import '../theme/connect_theme.dart';
-import '../widgets/connect_widgets.dart';
+import 'welcome_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key, this.embedded = false});
@@ -55,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   secondaryFlex: 2,
                 ),
                 const SizedBox(height: 32),
-                Center(child: Text('Log Out', style: connectMuted(14).copyWith(color: ConnectColors.danger))),
+                const Center(child: _LogOutButton()),
               ],
             ),
           );
@@ -73,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 24),
               prefs,
               const SizedBox(height: 32),
-              Text('Log Out', style: connectMuted(14).copyWith(color: ConnectColors.danger)),
+              const _LogOutButton(),
             ],
           ),
         );
@@ -87,6 +90,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: ConnectColors.background,
       body: SingleChildScrollView(child: content),
+    );
+  }
+}
+
+/// Tappable "Log Out" affordance shared by the mobile and wide profile
+/// layouts. Calls [AuthController.signOut] and routes back to the welcome
+/// screen so the user lands in the same state as a fresh app launch.
+class _LogOutButton extends ConsumerWidget {
+  const _LogOutButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () async {
+        await ref.read(authControllerProvider).signOut();
+        if (!context.mounted) return;
+        connectReplace(context, const WelcomeScreen());
+      },
+      child: Text(
+        'Log Out',
+        style: connectMuted(14).copyWith(color: ConnectColors.danger),
+      ),
     );
   }
 }

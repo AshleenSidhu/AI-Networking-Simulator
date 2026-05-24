@@ -178,56 +178,71 @@ class _StatsRow extends StatelessWidget {
 class _UpcomingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Note: Flutter forbids non-uniform Border colors when borderRadius is
+    // set. The purple accent stripe is rendered as a Positioned child
+    // inside a Stack instead, and the outer Container's border is uniform.
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: ConnectColors.card,
         borderRadius: BorderRadius.circular(ConnectColors.radius),
-        border: const Border(
-          left: BorderSide(color: ConnectColors.accent, width: 3),
-          top: BorderSide(color: ConnectColors.border),
-          right: BorderSide(color: ConnectColors.border),
-          bottom: BorderSide(color: ConnectColors.border),
-        ),
+        border: Border.all(color: ConnectColors.border),
       ),
-      child: Row(
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
         children: [
-          Container(
-            width: 52,
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              color: ConnectColors.accent.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Column(
+          const Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 3,
+            child: ColoredBox(color: ConnectColors.accent),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
               children: [
-                Text('TUE', style: TextStyle(fontSize: 10, color: ConnectColors.textMuted)),
-                Text('14', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 22)),
+                Container(
+                  width: 52,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    color: ConnectColors.accent.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('TUE', style: TextStyle(fontSize: 10, color: ConnectColors.textMuted)),
+                      Text('14', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 22)),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 14),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Recruiter Practice', style: TextStyle(fontWeight: FontWeight.w700)),
+                      Text('Tomorrow · 6:30 PM', style: TextStyle(color: ConnectColors.textMuted, fontSize: 12)),
+                      SizedBox(height: 6),
+                      Row(children: [_Pill('15 min'), SizedBox(width: 6), _Pill('Medium')]),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ConnectColors.accent,
+                    foregroundColor: ConnectColors.textPrimary,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: const Text('Join →', style: TextStyle(fontSize: 12)),
+                ),
               ],
             ),
-          ),
-          const SizedBox(width: 14),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Recruiter Practice', style: TextStyle(fontWeight: FontWeight.w700)),
-                Text('Tomorrow · 6:30 PM', style: TextStyle(color: ConnectColors.textMuted, fontSize: 12)),
-                SizedBox(height: 8),
-                Row(children: [_Pill('15 min'), SizedBox(width: 6), _Pill('Medium')]),
-              ],
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ConnectColors.accent,
-              foregroundColor: ConnectColors.textPrimary,
-              elevation: 0,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            child: const Text('Join →', style: TextStyle(fontSize: 12)),
           ),
         ],
       ),
@@ -263,12 +278,12 @@ class _ScenarioScroll extends StatelessWidget {
                 border: Border.all(color: ConnectColors.border),
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(emoji, style: const TextStyle(fontSize: 28)),
-                  const SizedBox(height: 8),
-                  Text(name, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-                  const Text('→', style: TextStyle(color: ConnectColors.accent)),
+                  Text(emoji, style: const TextStyle(fontSize: 24)),
+                  Text(name, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
+                  const Text('→', style: TextStyle(color: ConnectColors.accent, fontSize: 11)),
                 ],
               ),
             ),

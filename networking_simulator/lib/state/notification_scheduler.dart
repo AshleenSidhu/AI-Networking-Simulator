@@ -36,7 +36,7 @@ class NotificationScheduler extends Notifier<void> {
     ref.listen<AsyncValue<List<ScheduledSession>>>(
       scheduledSessionsProvider,
       (prev, next) {
-        final list = next.valueOrNull;
+        final list = next.value;
         if (list != null) _resyncTimers(list);
       },
       fireImmediately: true,
@@ -72,7 +72,7 @@ class NotificationScheduler extends Notifier<void> {
   Future<void> _fire(ScheduledSession session, NotificationTier tier) async {
     final firestore = ref.read(firestoreServiceProvider);
     // Compare-and-set: re-read and bail if someone else already fired this tier.
-    final fresh = ref.read(scheduledSessionsProvider).valueOrNull?.firstWhere(
+    final fresh = ref.read(scheduledSessionsProvider).value?.firstWhere(
           (s) => s.id == session.id,
           orElse: () => session,
         );
@@ -97,10 +97,12 @@ class NotificationScheduler extends Notifier<void> {
               tag: '${session.id}/thirtySec',
             );
       case NotificationTier.atTime:
-        ref.read(homeOverlayProvider.notifier).state = HomeOverlayRinging(
-          scheduledSessionId: session.id,
-          personaId: session.personaId,
-        );
+        ref.read(homeOverlayProvider.notifier).set(
+              HomeOverlayRinging(
+                scheduledSessionId: session.id,
+                personaId: session.personaId,
+              ),
+            );
         debugPrint('[NotificationScheduler] T-0 fired for ${session.id}');
     }
   }
@@ -108,7 +110,7 @@ class NotificationScheduler extends Notifier<void> {
   /// Called by the home screen's ringing overlay when the user taps
   /// Decline. Clears the overlay and marks the session dismissed.
   Future<void> declineRinging(String scheduledSessionId) async {
-    ref.read(homeOverlayProvider.notifier).state = const HomeOverlayNone();
+    ref.read(homeOverlayProvider.notifier).set(const HomeOverlayNone());
     await ref.read(scheduleControllerProvider.notifier)
         .dismissSession(scheduledSessionId);
   }
@@ -116,7 +118,7 @@ class NotificationScheduler extends Notifier<void> {
   /// Called when the user taps Answer; just clears the overlay (the home
   /// screen then routes to /call).
   void answerRinging() {
-    ref.read(homeOverlayProvider.notifier).state = const HomeOverlayNone();
+    ref.read(homeOverlayProvider.notifier).set(const HomeOverlayNone());
   }
 }
 
