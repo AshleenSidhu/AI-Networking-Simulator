@@ -400,7 +400,7 @@ class _BottomNav extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _Nav(0, Icons.home_rounded, 'Home', index, onTap),
-              _Nav(1, Icons.track_changes_rounded, 'Practice', index, onTap),
+              _Nav(1, Icons.phone_rounded, 'Practice', index, onTap),
               _Nav(2, Icons.calendar_month_rounded, 'Schedule', index, onTap),
               _Nav(3, Icons.person_rounded, 'Profile', index, onTap),
             ],
@@ -441,7 +441,7 @@ class _SideRail extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             _RailItem(0, Icons.home_rounded, 'Home', index, onTap),
-            _RailItem(1, Icons.track_changes_rounded, 'Practice', index, onTap),
+            _RailItem(1, Icons.phone_rounded, 'Practice', index, onTap),
             _RailItem(2, Icons.calendar_month_rounded, 'Schedule', index, onTap),
             _RailItem(3, Icons.person_rounded, 'Profile', index, onTap),
           ],
@@ -508,24 +508,27 @@ class _Nav extends StatelessWidget {
   Widget build(BuildContext context) {
     final active = current == i;
     final color = active ? ConnectColors.accent : ConnectColors.textMuted;
+    final iconOnly = ConnectResponsive.isMobile(context);
     return GestureDetector(
       onTap: () => onTap(i),
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: iconOnly ? 20 : 16, vertical: iconOnly ? 10 : 6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: 11,
-                fontWeight: active ? FontWeight.w600 : FontWeight.w500,
+            Icon(icon, color: color, size: iconOnly ? 26 : 24),
+            if (!iconOnly) ...[
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 11,
+                  fontWeight: active ? FontWeight.w600 : FontWeight.w500,
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),
