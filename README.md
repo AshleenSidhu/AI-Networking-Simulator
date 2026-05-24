@@ -16,7 +16,7 @@
 
 ## Functional Completeness
 - <ins>What Works:</ins>
-  - **User registration** collects name, profession/role (student, early-mid-senior professional), primary networking goals (land a job, investor pitch, general networking, client or sales calls), and industry; these can be edited later in profile settings. Profile displays other metrics and user preferences (similar to the homepage).
+  - **User registration** collects name, profession/role (student, early-mid-senior professional), primary networking goals (land a job, investor pitch, general networking, client or sales calls), and industry; these can be edited later in profile settings. **Profile** displays other metrics and user preferences (similar to the homepage).
   - After setup, the **homepage** shows upcoming practice sessions, competency progress (e.g., confidence, clarity), and persona interaction metrics (e.g., most frequently used persona).
   - **Practice page** lets users choose or create personas (e.g., recruiter, hiring manager), select conversation style and difficulty, set industry context, and receive both verbal and written tailored feedback.
   - The **scheduling page** displays practice calls with dates/times, practice-frequency data, and AI recommendations for when to practice. Furthermore, psychology notes that notifications are dopamine-inducing ‘attention-triggers’ that drive curiosity and improve engagement towards a task (Cse, 2026). A single "your session is starting" ping can be forgettable; here is a proposed remedy: Reminders for upcoming practice sessions at T‑60, T‑15, and T‑0.
