@@ -18,7 +18,7 @@ class GoogleSignInButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           foregroundColor: ConnectColors.textPrimary,
           backgroundColor: ConnectColors.card,
-          side: const BorderSide(color: ConnectColors.border),
+          side: BorderSide(color: ConnectColors.border),
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(ConnectColors.radius),
@@ -91,12 +91,12 @@ class AuthDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(child: Divider(color: ConnectColors.border)),
+        Expanded(child: Divider(color: ConnectColors.border)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(label, style: connectMuted(12)),
         ),
-        const Expanded(child: Divider(color: ConnectColors.border)),
+        Expanded(child: Divider(color: ConnectColors.border)),
       ],
     );
   }
@@ -129,7 +129,7 @@ class AuthTextField extends StatelessWidget {
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
-          style: const TextStyle(color: ConnectColors.textPrimary),
+          style: TextStyle(color: ConnectColors.textPrimary),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: connectMuted(14),
@@ -137,7 +137,7 @@ class AuthTextField extends StatelessWidget {
             fillColor: ConnectColors.card,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ConnectColors.radius),
-              borderSide: const BorderSide(color: ConnectColors.border),
+              borderSide: BorderSide(color: ConnectColors.border),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ConnectColors.radius),

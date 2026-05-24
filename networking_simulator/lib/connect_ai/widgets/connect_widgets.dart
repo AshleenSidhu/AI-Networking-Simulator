@@ -46,7 +46,7 @@ class ConnectPrimaryButton extends StatelessWidget {
           onPressed: onPressed,
           style: OutlinedButton.styleFrom(
             foregroundColor: ConnectColors.textPrimary,
-            side: const BorderSide(color: ConnectColors.border),
+            side: BorderSide(color: ConnectColors.border),
             padding: EdgeInsets.symmetric(vertical: large ? 18 : 16),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ConnectColors.radius)),
           ),
@@ -55,15 +55,20 @@ class ConnectPrimaryButton extends StatelessWidget {
       );
     }
 
+    final isAction = isActionButtonLabel(label);
+    final bgColor = isAction ? ConnectColors.actionGreen : ConnectColors.accent;
+    final fgColor = ConnectColors.onAccent;
+
     final button = SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: ConnectColors.accent,
-          foregroundColor: ConnectColors.textPrimary,
-          disabledForegroundColor: ConnectColors.textPrimary,
-          elevation: 0,
+          backgroundColor: bgColor,
+          foregroundColor: fgColor,
+          disabledForegroundColor: ConnectColors.textMuted,
+          elevation: isAction ? 2 : 0,
+          shadowColor: isAction ? ConnectColors.actionGreen.withValues(alpha: 0.35) : null,
           padding: EdgeInsets.symmetric(vertical: large ? 20 : 16),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ConnectColors.radius)),
         ),
@@ -72,7 +77,7 @@ class ConnectPrimaryButton extends StatelessWidget {
           style: GoogleFonts.inter(
             fontWeight: FontWeight.w700,
             fontSize: large ? 17 : 15,
-            color: ConnectColors.textPrimary,
+            color: fgColor,
           ),
         ),
       ),
@@ -217,8 +222,8 @@ class SelectableOptionCard extends StatelessWidget {
             width: selected ? 2 : 1,
           ),
           boxShadow: selected
-              ? [BoxShadow(color: ConnectColors.accent.withValues(alpha: 0.2), blurRadius: 16)]
-              : null,
+              ? ConnectColors.cardShadowSelected
+              : ConnectColors.cardShadow,
         ),
         child: Row(
           children: [

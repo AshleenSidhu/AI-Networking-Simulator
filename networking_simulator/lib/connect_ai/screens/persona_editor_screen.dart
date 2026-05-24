@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../layout/responsive.dart';
 import '../navigation/connect_routes.dart';
 import '../theme/connect_theme.dart';
-import '../widgets/connect_widgets.dart';
+import '../widgets/scenario/start_call_button.dart';
 import 'call_screen.dart';
 
 class PersonaEditorScreen extends StatefulWidget {
@@ -95,7 +95,10 @@ class _PersonaEditorScreenState extends State<PersonaEditorScreen> {
           children: [
             Text('Edit persona', style: connectTitle(context, size: 24)),
             const SizedBox(height: 8),
-            Text('Tune the name, role, and system prompt before your call.', style: connectMuted()),
+            Text(
+              'Tune the name, role, and system prompt. When you\'re ready, start your call.',
+              style: connectMuted(),
+            ),
             const SizedBox(height: 24),
             _FieldLabel('Name'),
             const SizedBox(height: 8),
@@ -113,7 +116,7 @@ class _PersonaEditorScreenState extends State<PersonaEditorScreen> {
               maxLines: 8,
             ),
             const SizedBox(height: 28),
-            ConnectPrimaryButton(label: 'Save & Start Call', onPressed: _startCall),
+            StartCallButton(enabled: true, onPressed: _startCall),
           ],
         ),
       ),
@@ -147,7 +150,7 @@ class _TextField extends StatelessWidget {
     return TextField(
       controller: controller,
       maxLines: maxLines,
-      style: const TextStyle(color: ConnectColors.textPrimary),
+      style: TextStyle(color: ConnectColors.textPrimary),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: connectMuted(14),
@@ -156,11 +159,11 @@ class _TextField extends StatelessWidget {
         contentPadding: const EdgeInsets.all(16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(ConnectColors.radius),
-          borderSide: const BorderSide(color: ConnectColors.border),
+          borderSide: BorderSide(color: ConnectColors.border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(ConnectColors.radius),
-          borderSide: const BorderSide(color: ConnectColors.border),
+          borderSide: BorderSide(color: ConnectColors.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(ConnectColors.radius),

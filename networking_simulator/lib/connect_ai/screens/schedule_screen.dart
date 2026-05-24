@@ -242,7 +242,7 @@ class _ScheduleAppBar extends StatelessWidget {
             IconButton(
               onPressed: () {},
               visualDensity: VisualDensity.compact,
-              icon: const Icon(Icons.search_rounded, size: 22, color: ScheduleColors.textSecondary),
+              icon: Icon(Icons.search_rounded, size: 22, color: ScheduleColors.textSecondary),
             ),
             Material(
               color: ScheduleColors.accent.withValues(alpha: 0.12),
@@ -404,7 +404,7 @@ class _AiRecommendationBanner extends StatelessWidget {
             color: ScheduleColors.surface,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: ScheduleColors.border),
-            boxShadow: const [BoxShadow(color: ScheduleColors.accentGlow, blurRadius: 40)],
+            boxShadow: [BoxShadow(color: ScheduleColors.accentGlow, blurRadius: 40)],
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
@@ -495,9 +495,9 @@ class _AddSessionSheetState extends State<AddSessionSheet> {
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: maxH),
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: ScheduleColors.surface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             border: Border(top: BorderSide(color: ScheduleColors.border)),
           ),
           child: SafeArea(
@@ -637,7 +637,7 @@ class _AddSessionSheetState extends State<AddSessionSheet> {
                   const SizedBox(height: 20),
                   Row(
                     children: [
-                      const Icon(Icons.notifications_none_rounded, size: 20, color: ScheduleColors.textSecondary),
+                      Icon(Icons.notifications_none_rounded, size: 20, color: ScheduleColors.textSecondary),
                       const SizedBox(width: 10),
                       Text('Remind me', style: scheduleInter(size: 14)),
                       const Spacer(),
@@ -690,7 +690,7 @@ class _AddSessionSheetState extends State<AddSessionSheet> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.calendar_today_outlined, size: 18, color: ScheduleColors.background),
+                            Icon(Icons.calendar_today_outlined, size: 18, color: ScheduleColors.background),
                             const SizedBox(width: 8),
                             Text(
                               'Schedule Session',

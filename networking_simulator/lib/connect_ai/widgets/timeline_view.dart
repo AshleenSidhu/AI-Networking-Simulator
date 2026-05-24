@@ -146,7 +146,7 @@ class _TimelineViewState extends State<TimelineView> {
                   children: List.generate(hours.length - 1, (_) {
                     return Container(
                       height: widget.hourHeight,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         border: Border(bottom: BorderSide(color: ScheduleColors.borderHairline)),
                       ),
                     );

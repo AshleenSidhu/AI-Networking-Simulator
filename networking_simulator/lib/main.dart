@@ -22,12 +22,20 @@ class ConnectAIApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ConnectAI',
-      debugShowCheckedModeBanner: false,
-      theme: buildConnectTheme(),
-      scrollBehavior: const ConnectScrollBehavior(),
-      home: const WelcomeScreen(),
+    return ListenableBuilder(
+      listenable: _connectState,
+      builder: (context, _) {
+        applyConnectThemeMode(dark: _connectState.isDarkMode);
+        return MaterialApp(
+          title: 'ConnectAI',
+          debugShowCheckedModeBanner: false,
+          theme: buildConnectTheme(),
+          darkTheme: buildConnectDarkTheme(),
+          themeMode: _connectState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          scrollBehavior: const ConnectScrollBehavior(),
+          home: const WelcomeScreen(),
+        );
+      },
     );
   }
 }
