@@ -21,7 +21,7 @@
   - **Practice page** lets users choose or create personas (e.g., recruiter, hiring manager), select conversation style and difficulty, set industry context, and receive both verbal and written tailored feedback.
   - The **scheduling page** displays practice calls with dates/times, practice-frequency data, and AI recommendations for when to practice.
 - <ins>Future Additions:</ins>
-  - Furthermore, psychology notes that notifications are dopamine-inducing ‘attention-triggers’ that drive curiosity and improve engagement towards a task (Cse, 2026). A single "your session is starting" ping can be forgettable; here is a proposed remedy:
+  - Psychology notes that notifications are dopamine-inducing ‘attention-triggers’ that drive curiosity and improve engagement towards a task (Cse, 2026). A single "your session is starting" ping can be forgettable; here is a proposed remedy:
     - Tiered scheduling for real schedules: ConnectAI sends notifications/reminders for upcoming sessions at multiple increments between 24 hours before the session and the session start (T‑0).
   - Broaden audience coverage to include unlisted professions/roles (e.g., career transitioners), as well as industries.
   - Add calendar integration to allow exporting/importing practice sessions to personal calendars (and vice-versa). Potentially allowing ConnectAI to bridge real-life schedules with practice: prepare users for upcoming interviews, networking events, or HR meetings based on their inputted calendar.
