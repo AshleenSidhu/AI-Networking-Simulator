@@ -37,6 +37,14 @@ class PersonaAgent {
   }
 
   Future<String> _loadTemplate() async {
+    // Custom (user-authored) personas store the template inline on the
+    // model. Skip the rootBundle lookup entirely for them — Flutter Web's
+    // asset loader prints a noisy "failed to fetch ... 404" log line
+    // *before* a try/catch can suppress it, polluting the console for
+    // every custom persona call.
+    if (persona.isCustom) {
+      return persona.systemPromptTemplate;
+    }
     final key = 'prompts/${persona.id}.md';
     if (_cache.containsKey(key)) return _cache[key]!;
     try {
@@ -44,8 +52,9 @@ class PersonaAgent {
       _cache[key] = raw;
       return raw;
     } catch (_) {
-      // Custom (user-authored) personas pass their full template inline
-      // via `Persona.systemPromptTemplate`.
+      // Defensive fallback for the (currently impossible) case of a
+      // template id that resolves but bundles. Keeps non-custom callers
+      // from crashing on a typo'd prompts/ entry.
       return persona.systemPromptTemplate;
     }
   }

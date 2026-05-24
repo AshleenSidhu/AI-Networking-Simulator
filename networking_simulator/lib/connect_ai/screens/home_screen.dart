@@ -163,13 +163,18 @@ class _StatsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final app = ConnectScope.of(context);
+    final g = app.growthPercent;
+    // Sign-aware formatter. `—` for the zero case to avoid showing a
+    // misleading "0% growth" before there's enough history to compare.
+    final growthLabel = g == 0 ? '—' : (g > 0 ? '+$g%' : '$g%');
     return Row(
       children: [
         _MiniStat('${app.sessionsCompleted}', 'Sessions'),
         const SizedBox(width: 10),
         _MiniStat('${app.avgScore}%', 'Confidence'),
         const SizedBox(width: 10),
-        _MiniStat('+23%', 'Growth', valueColor: ConnectColors.success),
+        _MiniStat(growthLabel, 'Growth',
+            valueColor: g > 0 ? ConnectColors.success : null),
       ],
     );
   }

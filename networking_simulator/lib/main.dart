@@ -10,6 +10,8 @@ import 'connect_ai/state/connect_app_state.dart';
 import 'connect_ai/theme/connect_theme.dart';
 import 'firebase_options.dart';
 import 'state/connect_state_provider.dart';
+import 'state/connect_state_sync.dart';
+import 'state/score_backfill.dart';
 
 final _connectState = ConnectAppState();
 
@@ -50,11 +52,20 @@ Future<void> main() async {
   );
 }
 
-class ConnectAIApp extends StatelessWidget {
+class ConnectAIApp extends ConsumerWidget {
   const ConnectAIApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Activates the Riverpod → ConnectAppState bridge for the app
+    // lifetime. The provider itself is a `Provider<void>` with no value;
+    // we only care about the side-effect (the `ref.listen` it installs).
+    ref.watch(connectStateSyncProvider);
+
+    // One-shot migration: copies any orphaned FeedbackReport.score back
+    // onto Session.score on sign-in. Idempotent; safe to re-run.
+    ref.watch(scoreBackfillProvider);
+
     return MaterialApp(
       title: 'ConnectAI',
       debugShowCheckedModeBanner: false,

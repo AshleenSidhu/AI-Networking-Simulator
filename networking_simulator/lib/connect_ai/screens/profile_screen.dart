@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../models/session.dart';
 import '../../state/auth_controller.dart';
+import '../../state/persona_repository.dart';
+import '../../state/user_stats_provider.dart';
 import '../layout/responsive.dart';
 import '../navigation/connect_routes.dart';
 import '../state/connect_app_state.dart';
@@ -32,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final isWide = ConnectResponsive.isDesktop(context);
 
         final header = _ProfileHeader(app: app);
-        final skills = _SkillsSection();
+        final skills = _SkillsSection(app: app);
         final sessions = _RecentSessions();
         final prefs = _PreferencesSection(
           notifications: notifications,
@@ -229,17 +232,23 @@ class _Stat extends StatelessWidget {
 }
 
 class _SkillsSection extends StatelessWidget {
+  const _SkillsSection({required this.app});
+  final ConnectAppState app;
+
   @override
   Widget build(BuildContext context) {
+    // Skill keys must match what the feedback judge emits. The 4 below
+    // are the canonical set; the judge may emit more, in which case they
+    // aggregate into `app.skills` but aren't surfaced here yet.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Your Skills', style: connectTitle(context, size: 18)),
         const SizedBox(height: 16),
-        const _SkillRow('Communication', 0.78),
-        const _SkillRow('Confidence', 0.71),
-        const _SkillRow('Active Listening', 0.64),
-        const _SkillRow('Follow-up', 0.85),
+        _SkillRow('Communication', app.skills['Communication'] ?? 0),
+        _SkillRow('Confidence', app.skills['Confidence'] ?? 0),
+        _SkillRow('Active Listening', app.skills['Active Listening'] ?? 0),
+        _SkillRow('Follow-up', app.skills['Follow-up'] ?? 0),
       ],
     );
   }
@@ -280,9 +289,10 @@ class _SkillRow extends StatelessWidget {
   }
 }
 
-class _RecentSessions extends StatelessWidget {
+class _RecentSessions extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncSessions = ref.watch(recentSessionsProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -294,23 +304,58 @@ class _RecentSessions extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        const _SessionRow('👔', 'Recruiter Practice', '2 days ago', '82'),
-        const _SessionRow('🤝', 'Networking Event', '5 days ago', '71'),
-        const _SessionRow('💰', 'Investor Pitch', '1 week ago', '68'),
+        asyncSessions.when(
+          loading: () => const Padding(
+            padding: EdgeInsets.symmetric(vertical: 24),
+            child: Center(
+              child: CircularProgressIndicator(color: ConnectColors.accent),
+            ),
+          ),
+          error: (e, _) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Text('Could not load sessions: $e', style: connectMuted()),
+          ),
+          data: (sessions) {
+            if (sessions.isEmpty) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: ConnectColors.card,
+                  borderRadius:
+                      BorderRadius.circular(ConnectColors.radius),
+                  border: Border.all(color: ConnectColors.border),
+                ),
+                child: Text(
+                  'Finish a call and it will show up here.',
+                  style: connectMuted(),
+                ),
+              );
+            }
+            return Column(
+              children: sessions
+                  .take(5)
+                  .map((s) => _SessionRow(session: s))
+                  .toList(),
+            );
+          },
+        ),
       ],
     );
   }
 }
 
-class _SessionRow extends StatelessWidget {
-  const _SessionRow(this.emoji, this.title, this.when, this.score);
-  final String emoji;
-  final String title;
-  final String when;
-  final String score;
+class _SessionRow extends ConsumerWidget {
+  const _SessionRow({required this.session});
+  final Session session;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final persona = ref.watch(personaByIdProvider(session.personaId));
+    final emoji = persona?.avatarEmoji ?? '💬';
+    final title = persona?.name ?? 'Custom Persona';
+    final when = _relativeTime(session.startedAt);
+    final scoreText = session.score?.toString();
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
@@ -331,23 +376,53 @@ class _SessionRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+                Text(title,
+                    style: const TextStyle(fontWeight: FontWeight.w600)),
                 Text(when, style: connectMuted(12)),
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: ConnectColors.success.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(10),
+          if (scoreText != null)
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: ConnectColors.success.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                '$scoreText/100',
+                style: const TextStyle(
+                  color: ConnectColors.success,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                ),
+              ),
+            )
+          else
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: ConnectColors.cardElevated,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text('No score', style: connectMuted(11)),
             ),
-            child: Text('$score/100', style: const TextStyle(color: ConnectColors.success, fontWeight: FontWeight.w600, fontSize: 12)),
-          ),
         ],
       ),
     );
   }
+}
+
+String _relativeTime(DateTime t) {
+  final now = DateTime.now();
+  final d = now.difference(t);
+  if (d.inDays >= 7) return '${(d.inDays / 7).floor()}w ago';
+  if (d.inDays >= 1) return '${d.inDays}d ago';
+  if (d.inHours >= 1) return '${d.inHours}h ago';
+  if (d.inMinutes >= 1) return '${d.inMinutes}m ago';
+  return 'just now';
 }
 
 class _PreferencesSection extends StatelessWidget {

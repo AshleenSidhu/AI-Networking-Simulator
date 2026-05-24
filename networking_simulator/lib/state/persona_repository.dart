@@ -14,6 +14,16 @@ class PersonaRepository {
 
   final Ref _ref;
 
+  /// Mirror of the latest streamed custom personas plus any in-flight saves
+  /// that haven't yet round-tripped through the Firestore snapshot listener.
+  /// Used by [byId] for synchronous lookup so [SessionController._connect]
+  /// (and the half-dozen widget watchers consuming `personaByIdProvider`)
+  /// can resolve a freshly-saved persona during the brief window before
+  /// `personasProvider` re-emits.
+  ///
+  /// Keyed by [Persona.id]. Templates live in [templates] and don't go here.
+  final Map<String, Persona> _customCache = {};
+
   /// The hardcoded set of bundled templates. Each entry's [Persona.id]
   /// must match a `prompts/<id>.md` file — PersonaAgent loads from there.
   ///
@@ -79,34 +89,40 @@ class PersonaRepository {
 
   Stream<List<Persona>> watch() {
     final firestore = _ref.watch(firestoreServiceProvider);
-    return firestore.watchUserPersonas().map((custom) => [
-          ...templates,
-          ...custom,
-        ]);
+    return firestore.watchUserPersonas().map((custom) {
+      // Keep the sync-lookup cache aligned with the latest Firestore
+      // snapshot. Replace rather than merge so deletes propagate.
+      _customCache
+        ..clear()
+        ..addEntries(custom.map((p) => MapEntry(p.id, p)));
+      return [...templates, ...custom];
+    });
   }
 
+  /// Synchronous lookup. Checks bundled templates first, then the cache of
+  /// custom personas mirrored from Firestore (and pre-warmed by [savePersona]
+  /// so an editor-to-call navigation never races the stream). Returns null
+  /// when truly unknown — callers must handle null and surface an error.
   Persona? byId(String id) {
-    return templates.firstWhere(
-      (p) => p.id == id,
-      orElse: () => const Persona(
-        id: '',
-        name: '',
-        role: '',
-        scenarioCategory: ScenarioCategory.networking,
-        avatarEmoji: '?',
-        voice: 'Aoede',
-        systemPromptTemplate: '',
-      ),
-    );
+    for (final t in templates) {
+      if (t.id == id) return t;
+    }
+    return _customCache[id];
   }
 
+  /// Writes a custom persona to Firestore and synchronously updates the
+  /// in-memory cache so [byId] / `personaByIdProvider` can resolve the new
+  /// id immediately — before the Firestore snapshot stream re-emits.
   Future<String> savePersona(Persona p) async {
     final firestore = _ref.read(firestoreServiceProvider);
-    return firestore.writeUserPersona(p);
+    final id = await firestore.writeUserPersona(p);
+    _customCache[id] = p.copyWith(id: id, isCustom: true);
+    return id;
   }
 
   Future<void> deletePersona(String id) async {
     final firestore = _ref.read(firestoreServiceProvider);
+    _customCache.remove(id);
     return firestore.deleteUserPersona(id);
   }
 }

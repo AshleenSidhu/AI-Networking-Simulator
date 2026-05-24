@@ -54,9 +54,61 @@ class ConnectAppState extends ChangeNotifier {
     );
   }
 
-  int sessionsCompleted = 12;
-  int avgScore = 74;
-  int dayStreak = 8;
+  // Initialized to zero so the first paint never shows misleading demo
+  // numbers. The bridge (`connectStateSyncProvider`) overwrites these from
+  // `userStatsProvider` within a frame of app start.
+  int sessionsCompleted = 0;
+  int avgScore = 0;
+  int dayStreak = 0;
+  int growthPercent = 0;
+
+  /// Per-skill 0..1 score averaged across the user's FeedbackReports.
+  /// Empty until the first report lands. Profile_screen reads it to drive
+  /// the skill-progress bars.
+  Map<String, double> skills = const {};
+
+  /// Backend-driven affordance: kept in sync with [userStatsProvider] by
+  /// `connectStateSyncProvider`. Don't call from widgets — call upstream
+  /// providers if you need to mutate Firestore.
+  void applyDerivedStats({
+    required int sessionsCompleted,
+    required int avgScore,
+    required int dayStreak,
+    required int growthPercent,
+    required Map<String, double> skills,
+  }) {
+    var changed = false;
+    if (this.sessionsCompleted != sessionsCompleted) {
+      this.sessionsCompleted = sessionsCompleted;
+      changed = true;
+    }
+    if (this.avgScore != avgScore) {
+      this.avgScore = avgScore;
+      changed = true;
+    }
+    if (this.dayStreak != dayStreak) {
+      this.dayStreak = dayStreak;
+      changed = true;
+    }
+    if (this.growthPercent != growthPercent) {
+      this.growthPercent = growthPercent;
+      changed = true;
+    }
+    if (!_skillsEqual(this.skills, skills)) {
+      this.skills = Map.unmodifiable(skills);
+      changed = true;
+    }
+    if (changed) notifyListeners();
+  }
+
+  bool _skillsEqual(Map<String, double> a, Map<String, double> b) {
+    if (a.length != b.length) return false;
+    for (final entry in a.entries) {
+      final other = b[entry.key];
+      if (other == null || (other - entry.value).abs() > 0.001) return false;
+    }
+    return true;
+  }
 
   String get initials {
     final parts = name.trim().split(RegExp(r'\s+'));

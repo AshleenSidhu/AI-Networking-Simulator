@@ -45,6 +45,7 @@ abstract class FirestoreService {
   Future<void> deleteScheduledSession(String id);
 
   // Feedback reports
+  Stream<List<FeedbackReport>> watchFeedbackReports();
   Future<void> writeFeedbackReport(FeedbackReport report);
   Future<FeedbackReport?> readFeedbackReport(String id);
 }
@@ -68,6 +69,7 @@ class MockFirestoreService implements FirestoreService {
   final _sessionsCtrl = StreamController<List<Session>>.broadcast();
   final _personasCtrl = StreamController<List<Persona>>.broadcast();
   final _scheduledCtrl = StreamController<List<ScheduledSession>>.broadcast();
+  final _feedbackCtrl = StreamController<List<FeedbackReport>>.broadcast();
 
   MockFirestoreService() {
     // Seed two mock past sessions so the home + profile screens have
@@ -98,6 +100,7 @@ class MockFirestoreService implements FirestoreService {
   void _emitSessions() => _sessionsCtrl.add(_sessions.values.toList());
   void _emitPersonas() => _personasCtrl.add(_personas.values.toList());
   void _emitScheduled() => _scheduledCtrl.add(_scheduled.values.toList());
+  void _emitFeedback() => _feedbackCtrl.add(_feedback.values.toList());
 
   @override
   Stream<List<Session>> watchRecentSessions({int limit = 20}) async* {
@@ -196,8 +199,15 @@ class MockFirestoreService implements FirestoreService {
   }
 
   @override
+  Stream<List<FeedbackReport>> watchFeedbackReports() async* {
+    yield _feedback.values.toList();
+    yield* _feedbackCtrl.stream;
+  }
+
+  @override
   Future<void> writeFeedbackReport(FeedbackReport report) async {
     _feedback[report.sessionId] = report;
+    _emitFeedback();
   }
 
   @override
@@ -320,6 +330,14 @@ class RealFirestoreService implements FirestoreService {
 
   @override
   Future<void> deleteScheduledSession(String id) => _scheduled.doc(id).delete();
+
+  @override
+  Stream<List<FeedbackReport>> watchFeedbackReports() {
+    return _feedback.snapshots().map(
+          (snap) =>
+              snap.docs.map((d) => FeedbackReport.fromJson(d.data())).toList(),
+        );
+  }
 
   @override
   Future<void> writeFeedbackReport(FeedbackReport report) =>

@@ -29,6 +29,15 @@ final feedbackProvider =
 
   if (last != null && !last.isStreaming) {
     await firestore.writeFeedbackReport(last);
+    // Denormalize score + report id onto the Session so home / profile
+    // stats can render without joining the feedbackReports collection.
+    // This is the path `Session.score`'s doc comment was promising.
+    await firestore.writeSession(
+      session.copyWith(
+        score: last.score,
+        feedbackReportId: last.sessionId,
+      ),
+    );
   }
 });
 
