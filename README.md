@@ -1,5 +1,5 @@
 # ConnectAI (AI Networking Simulator)
-> Team: **Git Happens**
+> Team: Git Happens
 > 
 > ## Table of Contents
 * [Problem-Solution Fit](#problem-solution-fit)
