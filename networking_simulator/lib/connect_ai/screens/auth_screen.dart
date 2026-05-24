@@ -11,6 +11,7 @@ import '../widgets/session_form_widgets.dart';
 import 'home_screen.dart';
 
 // --- welcome_screen.dart ---
+/// The first screen users see when they open the app.
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 
