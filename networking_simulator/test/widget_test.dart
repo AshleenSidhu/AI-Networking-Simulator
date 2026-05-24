@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:networking_simulator/connect_ai/screens/welcome_screen.dart';
+import 'package:networking_simulator/connect_ai/screens/auth_screen.dart';
 import 'package:networking_simulator/connect_ai/state/connect_app_state.dart';
 import 'package:networking_simulator/connect_ai/theme/connect_theme.dart';
 
