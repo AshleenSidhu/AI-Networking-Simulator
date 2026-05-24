@@ -14,7 +14,12 @@
 - <ins>Solutions & Benefits:</ins> ConnectAI is an AI‑powered networking simulator that provides both **customizable and fixed personas plus real‑time verbal feedback on your interactions**. The platform uses **human‑like simulations tailored to your industry, role, and goals** so practice translates naturally to real‑world situations. In addition to verbal feedback, ConnectAI gives **written summaries and performance metrics after each session so you can track progress over time.** Acting as a form of exposure practice, it helps users prepare for networking and cold‑calling, reduce anxiety, and build confidence. **Benefits include improved communication skills (general and industry‑specific), stronger rapport‑building, more effective self‑marketing, and increased access to professional opportunities and resources. Let your communication be the reason you stand out, honed through targeted practice with ConnectAI.**
 
 ## Functional Completeness
--  
+- <ins>What Works:</ins>
+  - User registration collects name, profession/role (student, early-mid-senior professional), primary networking goals (land a job, investor pitch, general networking, client or sales calls), and industry; these can be edited later in profile settings. Profile displays other metrics and user preferences (similar to the homepage).
+  - After setup, the homepage shows upcoming practice sessions, competency progress (e.g., confidence, clarity), and persona interaction metrics (e.g., most frequently used persona).
+  - Practice page lets users choose or create personas (e.g., recruiter, hiring manager), select conversation style and difficulty, set industry context, and receive both verbal and written tailored feedback.
+  - AI recommendations for when to practice. Furthermore, psychology notes that notifications are dopamine-inducing ‘attention-triggers’ that drive curiosity and improve engagement towards a task (Cse, 2026). A single "your session is starting" ping can be forgettable; here is a proposed remedy: Reminders for upcoming practice sessions at T‑60, T‑15, and T‑0. 
+
 ## Innovation & Originality
 - Provide general <ins>information</ins> about your project here.
 ## Technical Execution
