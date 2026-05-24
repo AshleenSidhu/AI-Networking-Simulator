@@ -101,7 +101,7 @@ class _RingingOverlayState extends ConsumerState<RingingOverlay>
                             .answerRinging();
                         connectPush(
                           context,
-                          CallScreen(personaId: widget.ringing.personaId),
+                          CallScreen(personaName: name, personaRole: role),
                         );
                       },
                     ),
