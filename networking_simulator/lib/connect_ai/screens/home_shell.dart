@@ -5,6 +5,7 @@ import '../theme/connect_theme.dart';
 import 'home_screen.dart';
 import 'placeholder_screen.dart';
 import 'profile_screen.dart';
+import 'schedule_screen.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key, this.initialIndex = 0});
@@ -36,11 +37,7 @@ class HomeShellState extends State<HomeShell> {
         subtitle: 'Scenario selection — next screen in the flow.',
         embedded: true,
       ),
-      const PlaceholderScreen(
-        title: 'Schedule',
-        subtitle: 'Your practice calendar — next screen in the flow.',
-        embedded: true,
-      ),
+      const ScheduleScreen(embedded: true),
       const ProfileScreen(embedded: true),
     ];
 

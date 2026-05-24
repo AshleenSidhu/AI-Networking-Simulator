@@ -23,6 +23,25 @@ void connectPush(BuildContext context, Widget page) {
   Navigator.push(context, connectRoute(page));
 }
 
+void connectSlideUp(BuildContext context, Widget page) {
+  Navigator.push(
+    context,
+    PageRouteBuilder<void>(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionDuration: const Duration(milliseconds: 350),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 1),
+            end: Offset.zero,
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic)),
+          child: child,
+        );
+      },
+    ),
+  );
+}
+
 void connectReplace(BuildContext context, Widget page) {
   Navigator.pushReplacement(context, connectRoute(page));
 }
