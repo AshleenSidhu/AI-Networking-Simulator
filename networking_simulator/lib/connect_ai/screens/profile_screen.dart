@@ -165,7 +165,7 @@ class _ProfileHeader extends StatelessWidget {
           onPressed: () {},
           style: OutlinedButton.styleFrom(
             foregroundColor: ConnectColors.textPrimary,
-            side: const BorderSide(color: ConnectColors.border),
+            side: BorderSide(color: ConnectColors.border),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ConnectColors.radius)),
           ),
           child: const Text('Edit Profile'),
@@ -391,7 +391,7 @@ class _SessionRow extends ConsumerWidget {
               ),
               child: Text(
                 '$scoreText/100',
-                style: const TextStyle(
+                style: TextStyle(
                   color: ConnectColors.success,
                   fontWeight: FontWeight.w600,
                   fontSize: 12,

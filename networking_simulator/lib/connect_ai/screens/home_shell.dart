@@ -65,7 +65,7 @@ class HomeShellState extends ConsumerState<HomeShell> {
         body: Row(
           children: [
             _SideRail(index: _index, onTap: goToTab),
-            const VerticalDivider(width: 1, color: ConnectColors.border),
+            VerticalDivider(width: 1, color: ConnectColors.border),
             Expanded(child: body),
           ],
         ),
@@ -90,7 +90,7 @@ class _BottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: ConnectColors.background,
         border: Border(top: BorderSide(color: ConnectColors.border)),
       ),
@@ -133,7 +133,7 @@ class _SideRail extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: ConnectColors.accent,
               ),
-              child: const Icon(Icons.mic_rounded, color: ConnectColors.textPrimary, size: 22),
+              child: Icon(Icons.mic_rounded, color: ConnectColors.textPrimary, size: 22),
             ),
             const SizedBox(height: 8),
             const Text(

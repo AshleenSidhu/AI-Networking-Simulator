@@ -74,7 +74,7 @@ class _EmptyState extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: Column(
         children: [
-          const Icon(Icons.calendar_today_rounded,
+          Icon(Icons.calendar_today_rounded,
               size: 40, color: ConnectColors.textMuted),
           const SizedBox(height: 14),
           Text('No upcoming sessions',
@@ -180,7 +180,7 @@ class _ScheduleRow extends ConsumerWidget {
                 ),
                 IconButton(
                   tooltip: 'Delete',
-                  icon: const Icon(Icons.close_rounded, color: ConnectColors.textMuted),
+                  icon: Icon(Icons.close_rounded, color: ConnectColors.textMuted),
                   onPressed: () => controller.deleteSession(session.id),
                 ),
               ],

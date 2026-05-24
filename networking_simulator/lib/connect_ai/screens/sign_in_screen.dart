@@ -93,7 +93,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                     shape: BoxShape.circle,
                     color: ConnectColors.accent,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.mic_rounded,
                     color: ConnectColors.textPrimary,
                     size: 36,

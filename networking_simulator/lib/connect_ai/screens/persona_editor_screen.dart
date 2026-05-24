@@ -146,7 +146,7 @@ You are roleplaying <a short situational frame>. Be warm, direct, and stay in ch
                   fillColor: ConnectColors.card,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(ConnectColors.radius),
-                    borderSide: const BorderSide(color: ConnectColors.border),
+                    borderSide: BorderSide(color: ConnectColors.border),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(ConnectColors.radius),
@@ -226,7 +226,7 @@ You are roleplaying <a short situational frame>. Be warm, direct, and stay in ch
             fillColor: ConnectColors.card,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ConnectColors.radius),
-              borderSide: const BorderSide(color: ConnectColors.border),
+              borderSide: BorderSide(color: ConnectColors.border),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ConnectColors.radius),
