@@ -5,7 +5,7 @@ import '../navigation/connect_routes.dart';
 import '../state/connect_app_state.dart';
 import '../theme/connect_theme.dart';
 import '../widgets/connect_widgets.dart';
-import 'placeholder_screen.dart';
+import 'scenario_select_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.onGoProfile});
@@ -148,7 +148,7 @@ class _HeroCard extends StatelessWidget {
             label: 'Start Practicing',
             onPressed: () => connectPush(
               context,
-              const PlaceholderScreen(title: 'Scenario Select', subtitle: 'Next screen in the flow.'),
+              const ScenarioSelectScreen(),
             ),
           ),
           const SizedBox(height: 12),
@@ -252,7 +252,7 @@ class _ScenarioScroll extends StatelessWidget {
           return GestureDetector(
             onTap: () => connectPush(
               context,
-              const PlaceholderScreen(title: 'Scenario Select'),
+              const ScenarioSelectScreen(),
             ),
             child: Container(
               width: 100,

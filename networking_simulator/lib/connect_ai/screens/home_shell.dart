@@ -1,27 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../models/scheduled_session.dart';
+import '../../state/home_overlay_provider.dart';
+import '../../state/notification_scheduler.dart';
 import '../layout/responsive.dart';
 import '../theme/connect_theme.dart';
+import '../widgets/ringing_overlay.dart';
 import 'home_screen.dart';
-import 'placeholder_screen.dart';
 import 'profile_screen.dart';
+import 'scenario_select_screen.dart';
+import 'schedule_screen.dart';
 
-class HomeShell extends StatefulWidget {
+class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key, this.initialIndex = 0});
 
   final int initialIndex;
 
   @override
-  State<HomeShell> createState() => HomeShellState();
+  ConsumerState<HomeShell> createState() => HomeShellState();
 }
 
-class HomeShellState extends State<HomeShell> {
+class HomeShellState extends ConsumerState<HomeShell> {
   late int _index;
 
   @override
   void initState() {
     super.initState();
     _index = widget.initialIndex;
+    // Boot the notification scheduler so timers arm for any pending
+    // scheduled sessions. The provider builds lazily on first read.
+    Future.microtask(() {
+      if (!mounted) return;
+      ref.read(notificationSchedulerProvider);
+    });
   }
 
   void goToTab(int i) => setState(() => _index = i);
@@ -29,40 +41,43 @@ class HomeShellState extends State<HomeShell> {
   @override
   Widget build(BuildContext context) {
     final useSide = ConnectResponsive.useSideNavigation(context);
+    final overlay = ref.watch(homeOverlayProvider);
+
     final pages = [
       HomeScreen(onGoProfile: () => goToTab(3)),
-      const PlaceholderScreen(
-        title: 'Practice',
-        subtitle: 'Scenario selection — next screen in the flow.',
-        embedded: true,
-      ),
-      const PlaceholderScreen(
-        title: 'Schedule',
-        subtitle: 'Your practice calendar — next screen in the flow.',
-        embedded: true,
-      ),
+      const ScenarioSelectScreen(embedded: true),
+      const ScheduleScreen(embedded: true),
       const ProfileScreen(embedded: true),
     ];
 
     final body = IndexedStack(index: _index, children: pages);
 
+    Widget shell;
     if (!useSide) {
-      return Scaffold(
+      shell = Scaffold(
         backgroundColor: ConnectColors.background,
         body: body,
         bottomNavigationBar: _BottomNav(index: _index, onTap: goToTab),
       );
+    } else {
+      shell = Scaffold(
+        backgroundColor: ConnectColors.background,
+        body: Row(
+          children: [
+            _SideRail(index: _index, onTap: goToTab),
+            const VerticalDivider(width: 1, color: ConnectColors.border),
+            Expanded(child: body),
+          ],
+        ),
+      );
     }
 
-    return Scaffold(
-      backgroundColor: ConnectColors.background,
-      body: Row(
-        children: [
-          _SideRail(index: _index, onTap: goToTab),
-          const VerticalDivider(width: 1, color: ConnectColors.border),
-          Expanded(child: body),
-        ],
-      ),
+    return Stack(
+      children: [
+        shell,
+        if (overlay is HomeOverlayRinging)
+          RingingOverlay(ringing: overlay),
+      ],
     );
   }
 }
