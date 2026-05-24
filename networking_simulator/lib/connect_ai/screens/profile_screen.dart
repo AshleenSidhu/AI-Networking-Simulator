@@ -22,7 +22,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool notifications = true;
-  bool darkMode = true;
   bool reminders = true;
 
   @override
@@ -39,10 +38,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final sessions = _RecentSessions();
         final prefs = _PreferencesSection(
           notifications: notifications,
-          darkMode: darkMode,
+          darkMode: app.isDarkMode,
           reminders: reminders,
           onNotifications: (v) => setState(() => notifications = v),
-          onDarkMode: (v) => setState(() => darkMode = v),
+          onDarkMode: app.setDarkMode,
           onReminders: (v) => setState(() => reminders = v),
         );
 

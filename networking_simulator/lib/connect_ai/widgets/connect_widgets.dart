@@ -46,7 +46,7 @@ class ConnectPrimaryButton extends StatelessWidget {
           onPressed: onPressed,
           style: OutlinedButton.styleFrom(
             foregroundColor: ConnectColors.textPrimary,
-            side: const BorderSide(color: ConnectColors.border),
+            side: BorderSide(color: ConnectColors.border),
             padding: EdgeInsets.symmetric(vertical: large ? 18 : 16),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ConnectColors.radius)),
           ),
@@ -55,18 +55,31 @@ class ConnectPrimaryButton extends StatelessWidget {
       );
     }
 
+    final isAction = isActionButtonLabel(label);
+    final bgColor = isAction ? ConnectColors.actionGreen : ConnectColors.accent;
+    final fgColor = ConnectColors.onAccent;
+
     final button = SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: ConnectColors.accent,
-          foregroundColor: ConnectColors.textPrimary,
-          elevation: 0,
+          backgroundColor: bgColor,
+          foregroundColor: fgColor,
+          disabledForegroundColor: ConnectColors.textMuted,
+          elevation: isAction ? 2 : 0,
+          shadowColor: isAction ? ConnectColors.actionGreen.withValues(alpha: 0.35) : null,
           padding: EdgeInsets.symmetric(vertical: large ? 20 : 16),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ConnectColors.radius)),
         ),
-        child: child,
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            fontWeight: FontWeight.w700,
+            fontSize: large ? 17 : 15,
+            color: fgColor,
+          ),
+        ),
       ),
     );
 
@@ -105,19 +118,18 @@ class _ShimmerButtonState extends State<_ShimmerButton>
     return AnimatedBuilder(
       animation: _c,
       builder: (_, child) {
-        return ShaderMask(
-          blendMode: BlendMode.srcATop,
-          shaderCallback: (bounds) {
-            return LinearGradient(
-              begin: Alignment(-1 + _c.value * 2, 0),
-              end: Alignment(_c.value * 2, 0),
-              colors: [
-                Colors.white.withValues(alpha: 0.85),
-                Colors.white,
-                Colors.white.withValues(alpha: 0.85),
-              ],
-            ).createShader(bounds);
-          },
+        final glow = 0.28 + (_c.value * 0.22);
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(ConnectColors.radius + 2),
+            boxShadow: [
+              BoxShadow(
+                color: ConnectColors.accent.withValues(alpha: glow),
+                blurRadius: 18,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
           child: child,
         );
       },
@@ -210,8 +222,8 @@ class SelectableOptionCard extends StatelessWidget {
             width: selected ? 2 : 1,
           ),
           boxShadow: selected
-              ? [BoxShadow(color: ConnectColors.accent.withValues(alpha: 0.2), blurRadius: 16)]
-              : null,
+              ? ConnectColors.cardShadowSelected
+              : ConnectColors.cardShadow,
         ),
         child: Row(
           children: [

@@ -66,12 +66,20 @@ class ConnectAIApp extends ConsumerWidget {
     // onto Session.score on sign-in. Idempotent; safe to re-run.
     ref.watch(scoreBackfillProvider);
 
-    return MaterialApp(
-      title: 'ConnectAI',
-      debugShowCheckedModeBanner: false,
-      theme: buildConnectTheme(),
-      scrollBehavior: const ConnectScrollBehavior(),
-      home: const WelcomeScreen(),
+    return ListenableBuilder(
+      listenable: _connectState,
+      builder: (context, _) {
+        applyConnectThemeMode(dark: _connectState.isDarkMode);
+        return MaterialApp(
+          title: 'ConnectAI',
+          debugShowCheckedModeBanner: false,
+          theme: buildConnectTheme(),
+          darkTheme: buildConnectDarkTheme(),
+          themeMode: _connectState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          scrollBehavior: const ConnectScrollBehavior(),
+          home: const WelcomeScreen(),
+        );
+      },
     );
   }
 }

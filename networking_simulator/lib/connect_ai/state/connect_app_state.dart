@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/connect_theme.dart';
+
 /// In-memory UI state (no backend). Updated during onboarding, read on Home/Profile.
 class ConnectAppState extends ChangeNotifier {
   String name = 'Alex';
@@ -110,6 +112,14 @@ class ConnectAppState extends ChangeNotifier {
     return true;
   }
 
+  bool isDarkMode = false;
+
+  void setDarkMode(bool value) {
+    isDarkMode = value;
+    applyConnectThemeMode(dark: value);
+    notifyListeners();
+  }
+
   String get initials {
     final parts = name.trim().split(RegExp(r'\s+'));
     if (parts.isEmpty) return '?';
@@ -141,6 +151,22 @@ class ConnectAppState extends ChangeNotifier {
     this.goal = goal;
     this.goalDetail = goalDetail;
     notifyListeners();
+  }
+
+  void updateProfile({
+    required String name,
+    required String role,
+    required Set<String> industries,
+    required String goal,
+  }) {
+    final detail = _goalDetails[goal] ?? goal;
+    updateFromOnboarding(
+      name: name.trim().isEmpty ? 'Alex' : name.trim(),
+      role: role,
+      industries: industries,
+      goal: goal,
+      goalDetail: detail,
+    );
   }
 }
 

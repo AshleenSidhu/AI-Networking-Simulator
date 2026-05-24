@@ -6,7 +6,7 @@ import '../layout/responsive.dart';
 import '../navigation/connect_routes.dart';
 import '../theme/connect_theme.dart';
 import '../widgets/connect_widgets.dart';
-import 'onboarding_screens.dart';
+import 'auth_screen.dart' show OnboardingQ1Screen;
 import 'sign_in_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -160,7 +160,7 @@ class _LogoBlock extends StatelessWidget {
             shape: BoxShape.circle,
             color: ConnectColors.accent,
           ),
-          child: const Icon(Icons.mic_rounded, color: ConnectColors.textPrimary, size: 30),
+          child: Icon(Icons.mic_rounded, color: ConnectColors.textPrimary, size: 30),
         ),
         const SizedBox(height: 24),
         Text(
