@@ -35,7 +35,7 @@
 -  Voice-to-voice connection implemented with Gemini Live over WebSocket.
 -  Firestore (Firebase- Google) used to store practice sessions, transcripts, summaries, and custom personas.
 -  Cursor IDE for code editing, terminal, debugging, and integrations; used Cursor AI, Claude, and ChatGPT to streamline implementation.
--  For technical details, see:
+-  For more technical details, see:
       networking_simulator/
       .cursor/plans/
       networking_simulator_hackathon_mvp_1f613750.plan.md
