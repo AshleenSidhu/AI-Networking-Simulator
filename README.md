@@ -26,7 +26,7 @@
   - Add calendar integration to allow exporting/importing practice sessions to personal calendars (and vice-versa). Potentially allowing ConnectAI to bridge real-life schedules with practice: prepare users for upcoming interviews, networking events, or HR meetings based on their inputted calendar.
   - Improve persona realism by incorporating real‑world data and judging criteria from industry professionals (e.g., HR recruiters and hiring managers).
 
-## Innovation & Originality
+## Innovation and Originality
 - ConnectAI’s originality shines in its **humanistic approach to networking, cold‑calling, and verbal‑communication practice.** It offers both customizable and fixed personas for sessions and provides multimodal, **personalized interactions and feedback—voice‑to‑voice and text‑based.** We also plan UX‑friendly features such as **tiered scheduling** to keep upcoming practice sessions memorable and users engaged.
   
 ## Technical Execution
@@ -35,10 +35,10 @@
 -  Firestore (Firebase- Google) used to store practice sessions, transcripts, summaries, and custom personas.
 -  Cursor IDE for code editing, terminal, debugging, and integrations; used Cursor AI, Claude, and ChatGPT to streamline implementation.
   
-## UX & Design
+## UX and Design
 -  ConnectAI features a **simple, effective interface** with light and dark modes. It avoids crowding by displaying essential features, ensures smooth transitions between pages, and uses color and size to make important content salient when clicked. Intuitive icons improve clarity and comprehension.
   
-## Learning & Ambition
+## Learning and Ambition
 -  Git Happens pushed itself on multiple fronts. During brainstorming and planning we evaluated how best to achieve ConnectAI’s goals: what users would (or wouldn’t) benefit from, which incentives to offer, and how to reach target audiences. Technically, team members learned Google’s Flutter framework and Dart for the first time. Through iterative review and refinement, Git Happens produced an AI networking‑simulator demo with a user‑friendly interface that highlights the most important features, all within the hackathon submission deadline.
 
 ## Citations
