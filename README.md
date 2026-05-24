@@ -8,6 +8,7 @@
 * [Technical Execution](#technical-execution)
 * [UX & Design](#ux-&-design)
 * [Learning & Ambition](#learning-&-ambition)
+* [Citations](#citations)
 
 ## Problem-Solution Fit
 - <ins>Problem:</ins> **Verbal communication**  is a key part of daily life and often shapes how others perceive us in professional settings like networking and cold calling. Yet it can be difficult: a 2024 BankMyCell survey found 81% of millennials feel apprehensive before making phone calls, and a 2025 AXA Insurance Belgium study reported 49% of Gen Z avoid calls due to anxiety. **Phone (telephonic) anxiety**  can overlap with social anxiety and lead to call‑avoidance driven by discomfort, uncertainty, or negative emotions, effects that may be stronger in professional contexts. **Networking is also intimidating**  for reasons such as fear of judgment, not knowing what to say (McMaster University, 2025), fear of making mistakes in high‑stakes situations, or past negative experiences (Executive Recruit, 2024). Whether you need practice to overcome anxiety or you’re an inexperienced student or professional, **ConnectAI aims to provide practical, accessible experience with networking and calls to help develop verbal communication skills anytime, anywhere, at any career stage.**
@@ -18,16 +19,29 @@
   - User registration collects name, profession/role (student, early-mid-senior professional), primary networking goals (land a job, investor pitch, general networking, client or sales calls), and industry; these can be edited later in profile settings. Profile displays other metrics and user preferences (similar to the homepage).
   - After setup, the homepage shows upcoming practice sessions, competency progress (e.g., confidence, clarity), and persona interaction metrics (e.g., most frequently used persona).
   - Practice page lets users choose or create personas (e.g., recruiter, hiring manager), select conversation style and difficulty, set industry context, and receive both verbal and written tailored feedback.
-  - AI recommendations for when to practice. Furthermore, psychology notes that notifications are dopamine-inducing ‘attention-triggers’ that drive curiosity and improve engagement towards a task (Cse, 2026). A single "your session is starting" ping can be forgettable; here is a proposed remedy: Reminders for upcoming practice sessions at T‑60, T‑15, and T‑0. 
+  - AI recommendations for when to practice. Furthermore, psychology notes that notifications are dopamine-inducing ‘attention-triggers’ that drive curiosity and improve engagement towards a task (Cse, 2026). A single "your session is starting" ping can be forgettable; here is a proposed remedy: Reminders for upcoming practice sessions at T‑60, T‑15, and T‑0.
+- <ins>Future Additions:</ins>
+  1. Tiered scheduling for real schedules: ConnectAI sends notifications/reminders for upcoming sessions at multiple increments between 24 hours before the session and the session start (T‑0).
+  2. Broaden audience coverage to include unlisted professions/roles (e.g., career transitioners), as well as industries.
+  3. Add calendar integration to allow exporting/importing practice sessions to personal calendars (and vice-versa). Potentially allowing ConnectAI to bridge real-life schedules with practice: prepare users for upcoming interviews, networking events, or HR meetings based on their inputted calendar.
+  4. Improve persona realism by incorporating real‑world data and judging criteria from industry professionals (e.g., HR recruiters and hiring managers).
 
 ## Innovation & Originality
-- Provide general <ins>information</ins> about your project here.
+- ConnectAI’s originality shines in its **humanistic approach to networking, cold‑calling, and verbal‑communication practice.** It offers both customizable and fixed personas for sessions and provides multimodal, **personalized interactions and feedback—voice‑to‑voice and text‑based.** We also plan UX‑friendly features such as **tiered scheduling** to keep upcoming practice sessions memorable and users engaged.
+  
 ## Technical Execution
--  Provide general information about your project here.
+-  Web app built with Google’s Flutter framework — primary languages: Dart (frontend) and C++ (backend). The backend runs in the same browser bundle as the UI, so there is no HTTP boundary, no /api/* routes, and no JSON-over-HTTP between layers.
+-  Voice-to-voice connection implemented with Gemini Live over WebSocket.
+-  Firestore (Firebase- Google) used to store practice sessions, transcripts, summaries, and custom personas.
+-  Cursor IDE for code editing, terminal, debugging, and integrations; used Cursor AI, Claude, and ChatGPT to streamline implementation.
+  
 ## UX & Design
--  Provide general information about your project here.
+-  ConnectAI features a **simple, effective interface** with light and dark modes. It avoids crowding by displaying essential features, ensures smooth transitions between pages, and uses color and size to make important content salient when clicked. Intuitive icons improve clarity and comprehension.
+  
 ## Learning & Ambition
--  Provide general information about your project here.
+-  Git Happens pushed itself on multiple fronts. During brainstorming and planning we evaluated how best to achieve ConnectAI’s goals: what users would (or wouldn’t) benefit from, which incentives to offer, and how to reach target audiences. Technically, team members learned Google’s Flutter framework and Dart for the first time. Through iterative review and refinement, Git Happens produced an AI networking‑simulator demo with a user‑friendly interface that highlights the most important features, all within the hackathon submission deadline.
+
+## Citations
 
 
 
