@@ -39,7 +39,7 @@
 -  ConnectAI features a **simple, effective interface** with light and dark modes. It avoids crowding by displaying essential features, ensures smooth transitions between pages, and uses color and size to make important content salient when clicked. Intuitive icons improve clarity and comprehension.
   
 ## Learning and Ambition
--  Git Happens pushed itself on multiple fronts. During brainstorming and planning we evaluated how best to achieve ConnectAI’s goals: what users would (or wouldn’t) benefit from, which incentives to offer, and how to reach target audiences. Technically, team members learned Google’s Flutter framework and Dart for the first time. Through iterative review and refinement, Git Happens produced an AI networking‑simulator demo with a user‑friendly interface that highlights the most important features, all within the hackathon submission deadline.
+-  Git Happens pushed itself on multiple fronts. During brainstorming and planning we evaluated how best to achieve ConnectAI’s goals: what users would (or wouldn’t) benefit from, which incentives to offer, and how to reach target audiences. Technically, team members utilized Google’s Flutter framework and Dart for the first time. Through iterative review and refinement, Git Happens produced an AI networking‑simulator demo with a user‑friendly interface that highlights the most important features, all within the hackathon submission deadline.
 
 ## Citations
 - Executive Recruit. (2024). *The Importance of Mastering Networking and Cold Call Communication: A Critical Skill for Everyone, Not Just Salespeople.* LinkedIn. https://www.linkedin.com/pulse/importance-mastering-networking-cold-call-communication-je8ae/
