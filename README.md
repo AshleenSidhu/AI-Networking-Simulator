@@ -10,5 +10,13 @@
 * [Learning & Ambition](#learning-&-ambition)
 
 ## Innovation & Originality
+-  Provide general information about your project here.
+## Technical Execution
+## Functional Completeness
+## Problem-Solution Fit
+## UX & Design
+## Learning & Ambition
+
+
 
 
