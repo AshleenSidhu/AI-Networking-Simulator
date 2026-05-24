@@ -4,10 +4,10 @@
 > ## Table of Contents
 * [Problem-Solution Fit](#problem-solution-fit)
 * [Functional Completeness](#functional-completeness)
-* [Innovation & Originality](#innovation-&-originality)
+* [Innovation & Originality](#innovation-and-originality)
 * [Technical Execution](#technical-execution)
-* [UX & Design](#ux-&-design)
-* [Learning & Ambition](#learning-&-ambition)
+* [UX & Design](#ux-and-design)
+* [Learning & Ambition](#learning-and-ambition)
 * [Citations](#citations)
 
 ## Problem-Solution Fit
